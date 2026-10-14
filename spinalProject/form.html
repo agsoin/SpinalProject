@@ -1,0 +1,681 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Aviraj Soin AI Spinal Intake – Patient Form</title>
+    <meta name="description"
+        content="Aviraj Soin AI Spinal Intake Form — Patient Demographics. Secure, comprehensive intake for spinal care patients.">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400;1,600&family=Inter:wght@300;400;500;600;700&display=swap"
+        rel="stylesheet">
+
+    <link rel='stylesheet' href='intake.css'>
+</head>
+
+<body>
+
+    <div class="page-wrap">
+
+        <!-- ══ PROGRESS BAR ══ -->
+        <nav class="progress-band" aria-label="Form progress">
+            <div class="progress-inner">
+                <a href="index.html" class="back-link"><span>Home</span></a>
+                <div class="progress-steps">
+                    <div class="step-node active">
+                        <div class="step-circle">1</div>
+                        <span class="step-label">Demographics</span>
+                        <div class="step-bar"></div>
+                    </div>
+                    <div class="step-node upcoming">
+                        <div class="step-circle">2</div>
+                        <span class="step-label">Pain Profile</span>
+                    </div>
+                    <div class="step-node upcoming">
+                        <div class="step-circle">3</div>
+                        <span class="step-label">Assessments</span>
+                    </div>
+                    <div class="step-node upcoming">
+                        <div class="step-circle">4</div>
+                        <span class="step-label">Medical History</span>
+                    </div>
+                    <div class="step-node upcoming">
+                        <div class="step-circle">5</div>
+                        <span class="step-label">Patient Goals</span>
+                    </div>
+                </div>
+            </div>
+        </nav>
+
+        <!-- ══ MAIN CONTENT ══ -->
+        <div class="main-content">
+
+            <!-- Left: Form -->
+            <div class="form-card">
+                <div class="card-topbar">
+                    <div class="topbar-icon">👤</div>
+                    <div class="topbar-text">
+                        <h2>Patient Demographics</h2>
+                        <p>Step 1 of 5 — Please provide your basic information to create your patient profile</p>
+                    </div>
+                </div>
+
+                <div class="form-body">
+
+                    <!-- Validation Banner -->
+                    <div id="val-banner" role="alert">
+                        <span>⚠️</span>
+                        <span id="val-msg">Please complete all required fields before continuing.</span>
+                    </div>
+
+                    <!-- §1 Personal Info -->
+                    <div class="subsection">
+                        <div class="subsection-hd">
+                            <span class="tag">01 — Personal Information</span>
+                            <div class="rule"></div>
+                        </div>
+
+                        <div class="form-row c2">
+                            <div class="form-field" id="field-full_name">
+                                <label for="full_name">Full Name <span class="req">*</span></label>
+                                <input type="text" id="full_name" name="full_name" placeholder="e.g., Jane Smith"
+                                    required autocomplete="name">
+                                <span class="field-err">Full name is required.</span>
+                            </div>
+                            <div class="form-field" id="field-dob">
+                                <label for="dob">Date of Birth <span class="req">*</span></label>
+                                <input type="date" id="dob" name="dob" required autocomplete="bday">
+                                <span class="field-err">Date of birth is required.</span>
+                            </div>
+                        </div>
+
+                        <div class="form-row c3">
+                            <div class="form-field">
+                                <label for="age">Age <span class="tag-auto">Auto</span></label>
+                                <input type="number" id="age" name="age" readonly placeholder="—" tabindex="-1">
+                            </div>
+                            <div class="form-field" id="field-sex">
+                                <label for="sex">Sex <span class="req">*</span></label>
+                                <select id="sex" name="sex" required>
+                                    <option value="">Select…</option>
+                                    <option value="male">Male</option>
+                                    <option value="female">Female</option>
+                                    <option value="non-binary">Non-Binary / Non-Conforming</option>
+                                    <option value="prefer-not">Prefer not to say</option>
+                                </select>
+                                <span class="field-err">Please select a value.</span>
+                            </div>
+                            <div class="form-field">
+                                <label for="marital_status">Marital Status</label>
+                                <select id="marital_status" name="marital_status">
+                                    <option value="">Select…</option>
+                                    <option value="single">Single</option>
+                                    <option value="married">Married</option>
+                                    <option value="divorced">Divorced</option>
+                                    <option value="widowed">Widowed</option>
+                                    <option value="separated">Separated</option>
+                                    <option value="domestic">Domestic Partnership</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- §2 Contact Info -->
+                    <div class="subsection">
+                        <div class="subsection-hd">
+                            <span class="tag">02 — Contact Information</span>
+                            <div class="rule"></div>
+                        </div>
+
+                        <div class="form-row c2">
+                            <div class="form-field" id="field-email">
+                                <label for="email">Email Address <span class="req">*</span></label>
+                                <input type="email" id="email" name="email" placeholder="you@example.com" required
+                                    autocomplete="email">
+                                <span class="field-err">A valid email is required.</span>
+                            </div>
+                            <div class="form-field" id="field-phone">
+                                <label for="phone">Phone Number <span class="req">*</span></label>
+                                <input type="tel" id="phone" name="phone" placeholder="(123) 456-7890" required
+                                    autocomplete="tel">
+                                <span class="field-err">Phone number is required.</span>
+                            </div>
+                        </div>
+
+                        <div class="form-row c1">
+                            <div class="form-field">
+                                <label for="address">Street Address</label>
+                                <input type="text" id="address" name="address" placeholder="Street address"
+                                    autocomplete="street-address">
+                            </div>
+                        </div>
+
+                        <div class="form-row c3">
+                            <div class="form-field">
+                                <label for="city">City</label>
+                                <input type="text" id="city" name="city" placeholder="City"
+                                    autocomplete="address-level2">
+                            </div>
+                            <div class="form-field">
+                                <label for="state">State / Province</label>
+                                <input type="text" id="state" name="state" placeholder="State"
+                                    autocomplete="address-level1">
+                            </div>
+                            <div class="form-field">
+                                <label for="zip">ZIP / Postal Code</label>
+                                <input type="text" id="zip" name="zip" placeholder="ZIP" autocomplete="postal-code">
+                            </div>
+                        </div>
+
+                        <div class="form-row c2">
+                            <div class="form-field">
+                                <label for="country">Country</label>
+                                <select id="country" name="country" autocomplete="country">
+                                    <option value="US">United States</option>
+                                    <option value="CA">Canada</option>
+                                    <option value="UK">United Kingdom</option>
+                                    <option value="AU">Australia</option>
+                                    <option value="other">Other</option>
+                                </select>
+                            </div>
+                            <div class="form-field">
+                                <label for="occupation">Occupation</label>
+                                <input type="text" id="occupation" name="occupation"
+                                    placeholder="e.g., Teacher, Engineer, Retired">
+                            </div>
+                        </div>
+
+                        <div class="form-row c2">
+                            <div class="form-field">
+                                <label for="emergency_name">Emergency Contact Name</label>
+                                <input type="text" id="emergency_name" name="emergency_name" placeholder="Full name">
+                            </div>
+                            <div class="form-field">
+                                <label for="emergency_phone">Emergency Contact Phone</label>
+                                <input type="tel" id="emergency_phone" name="emergency_phone"
+                                    placeholder="(123) 456-7890">
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- §3 Insurance -->
+                    <div class="subsection">
+                        <div class="subsection-hd">
+                            <span class="tag">03 — Insurance Information</span>
+                            <div class="rule"></div>
+                        </div>
+
+                        <div class="form-row c2">
+                            <div class="form-field">
+                                <label for="insurance">Insurance Carrier</label>
+                                <input type="text" id="insurance" name="insurance"
+                                    placeholder="e.g., Blue Cross, Aetna, Medicare">
+                            </div>
+                            <div class="form-field">
+                                <label for="ins_id">Insurance ID / Member #</label>
+                                <input type="text" id="ins_id" name="ins_id" placeholder="Member ID">
+                            </div>
+                        </div>
+
+                        <div class="form-row c2">
+                            <div class="form-field">
+                                <label for="ins_group">Group Number</label>
+                                <input type="text" id="ins_group" name="ins_group" placeholder="Group #">
+                            </div>
+                            <div class="form-field">
+                                <label for="ins_phone">Insurance Phone</label>
+                                <input type="tel" id="ins_phone" name="ins_phone" placeholder="(800) 000-0000">
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- §4 Care Team -->
+                    <div class="subsection">
+                        <div class="subsection-hd">
+                            <span class="tag">04 — Care Team</span>
+                            <div class="rule"></div>
+                        </div>
+
+                        <div class="form-row c2">
+                            <div class="form-field">
+                                <label for="pcp_name">Primary Care Physician</label>
+                                <input type="text" id="pcp_name" name="pcp_name" placeholder="Dr. Full Name">
+                            </div>
+                            <div class="form-field">
+                                <label for="pcp_phone">PCP Phone</label>
+                                <input type="tel" id="pcp_phone" name="pcp_phone" placeholder="(123) 456-7890">
+                            </div>
+                        </div>
+
+                        <div class="form-row c2">
+                            <div class="form-field">
+                                <label for="pcp_address">PCP Office Address</label>
+                                <input type="text" id="pcp_address" name="pcp_address" placeholder="Office Address">
+                            </div>
+                            <div class="form-field">
+                                <label for="referring">Referring Provider <span class="label-note">(if
+                                        applicable)</span></label>
+                                <input type="text" id="referring" name="referring" placeholder="Dr. Full Name">
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- §5 Physical Measurements -->
+                    <div class="subsection">
+                        <div class="subsection-hd">
+                            <span class="tag">05 — Physical Measurements</span>
+                            <div class="rule"></div>
+                        </div>
+
+                        <div class="form-row c2">
+                            <div class="form-field">
+                                <label for="height">Height</label>
+                                <input type="text" id="height" name="height" placeholder="e.g., 5'10&quot; or 178 cm">
+                            </div>
+                            <div class="form-field">
+                                <label for="weight">Weight (lbs)</label>
+                                <input type="number" id="weight" name="weight" placeholder="lbs" step="0.1" min="1">
+                            </div>
+                        </div>
+
+                        <div class="form-row c2">
+                            <div class="form-field">
+                                <label for="bmi">BMI <span class="tag-auto">Auto-Calculated</span></label>
+                                <input type="text" id="bmi" name="bmi" readonly placeholder="—" tabindex="-1">
+                            </div>
+                            <div class="form-field">
+                                <label for="bmi_cat">BMI Category <span class="tag-auto">Auto</span></label>
+                                <input type="text" id="bmi_cat" name="bmi_cat" readonly placeholder="—" tabindex="-1">
+                            </div>
+                        </div>
+                    </div>
+
+                </div><!-- /form-body -->
+
+                <!-- Card foot -->
+                <div class="card-foot">
+                    <div class="step-counter">Step <strong>1</strong> of <strong>5</strong> — Demographics</div>
+                    <div>
+                        <button type="button" class="btn btn-primary" onclick="validateAndContinue()">Continue
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Right: Sidebar -->
+            <aside class="sidebar">
+
+                <!-- Checklist -->
+                <div class="side-card">
+                    <div class="side-card-hd">📋 Progress</div>
+                    <div class="side-card-body">
+                        <div class="check-list">
+                            <div class="check-item done">
+                                <div class="ci">✓</div> Demographics
+                            </div>
+                            <div class="check-item todo">
+                                <div class="ci">2</div> Pain Profile
+                            </div>
+                            <div class="check-item todo">
+                                <div class="ci">3</div> Assessments
+                            </div>
+                            <div class="check-item todo">
+                                <div class="ci">4</div> Medical History
+                            </div>
+                            <div class="check-item todo">
+                                <div class="ci">5</div> Patient Goals
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- HIPAA Card -->
+                <div class="hipaa-card">
+                    <div class="hipaa-icon">🔒</div>
+                    <h4>HIPAA Protected</h4>
+                    <p>All information is fully confidential and encrypted. Only authorised members of your care team
+                        will have access.</p>
+                </div>
+
+                <!-- Tips -->
+                <div class="side-card">
+                    <div class="side-card-hd">💡 Helpful Tips</div>
+                    <div class="side-card-body">
+                        <div class="tip-list">
+                            <div class="tip-item">Age and BMI are calculated automatically — no guessing needed.</div>
+                            <div class="tip-item">Only fields marked <strong style="color:#e05252">*</strong> are
+                                required.</div>
+                            <div class="tip-item">Your progress is saved automatically as you type.</div>
+                            <div class="tip-item">Insurance info can be found on the back of your insurance card.</div>
+                        </div>
+                    </div>
+                </div>
+
+            </aside>
+
+        </div><!-- /main-content -->
+
+        <!-- ══ FOOTER ══ -->
+        <footer class="site-footer">
+            <p>© 2025 Aviraj Soin AI Spinal Intake — All rights reserved</p>
+            <div class="footer-links">
+                <a href="#">Privacy Policy</a>
+                <a href="#">Terms of Use</a>
+                <a href="#">HIPAA Notice</a>
+                <a href="#">Contact</a>
+            </div>
+        </footer>
+
+    </div><!-- /page-wrap -->
+
+    <script>
+        /* ── Auto-age from DOB ─────────────────────────────── */
+        document.getElementById('dob').addEventListener('change', function () {
+            const dob = new Date(this.value);
+            if (isNaN(dob)) return;
+            const today = new Date();
+            let age = today.getFullYear() - dob.getFullYear();
+            const m = today.getMonth() - dob.getMonth();
+            if (m < 0 || (m === 0 && today.getDate() < dob.getDate())) age--;
+            document.getElementById('age').value = age >= 0 ? age : '';
+        });
+
+        /* ── Parse height helper ──────────────────────────── */
+        function parseHeightToInches(val) {
+            if (!val) return 0;
+            val = val.trim().toLowerCase();
+            let m = val.match(/^(\d+)\s*[''′]\s*(\d+)?\s*["″]?$/);
+            if (m) return parseInt(m[1]) * 12 + (parseInt(m[2]) || 0);
+            m = val.match(/^([\d.]+)\s*cm$/);
+            if (m) return parseFloat(m[1]) / 2.54;
+            m = val.match(/^([\d.]+)$/);
+            if (m) {
+                const n = parseFloat(m[1]);
+                return n < 20 ? n * 12 : n / 2.54;
+            }
+            return 0;
+        }
+
+        /* ── Auto-BMI ──────────────────────────────────────── */
+        function calcBMI() {
+            const totalIn = parseHeightToInches(document.getElementById('height').value);
+            const wt = parseFloat(document.getElementById('weight').value) || 0;
+            if (totalIn <= 0 || wt <= 0) {
+                document.getElementById('bmi').value = '';
+                document.getElementById('bmi_cat').value = '';
+                return;
+            }
+            const bmi = (wt / (totalIn * totalIn)) * 703;
+            document.getElementById('bmi').value = bmi.toFixed(1);
+            const cat =
+                bmi < 18.5 ? 'Underweight' :
+                    bmi < 25 ? 'Normal weight' :
+                        bmi < 30 ? 'Overweight' :
+                            bmi < 35 ? 'Obese Class I' :
+                                bmi < 40 ? 'Obese Class II' : 'Obese Class III';
+            document.getElementById('bmi_cat').value = cat;
+        }
+        ['height', 'weight'].forEach(id =>
+            document.getElementById(id).addEventListener('input', calcBMI));
+
+        /* ── Phone formatter ──────────────────────────────── */
+        function fmtPhone(el) {
+            let v = el.value.replace(/\D/g, '').slice(0, 10);
+            if (v.length >= 7) v = '(' + v.slice(0, 3) + ') ' + v.slice(3, 6) + '-' + v.slice(6);
+            else if (v.length >= 4) v = '(' + v.slice(0, 3) + ') ' + v.slice(3);
+            else if (v.length > 0) v = '(' + v;
+            el.value = v;
+        }
+        ['phone', 'pcp_phone', 'ins_phone', 'emergency_phone'].forEach(id => {
+            const el = document.getElementById(id);
+            if (el) el.addEventListener('input', () => fmtPhone(el));
+        });
+
+        /* ── Validation ──────────────────────────────────── */
+        const required = [
+            { id: 'full_name', label: 'Full Name' },
+            { id: 'dob', label: 'Date of Birth' },
+            { id: 'sex', label: 'Sex' },
+            { id: 'email', label: 'Email Address' },
+            { id: 'phone', label: 'Phone Number' }
+        ];
+
+        function clearErrors() {
+            required.forEach(f => {
+                const w = document.getElementById('field-' + f.id);
+                if (w) w.classList.remove('err');
+            });
+            document.getElementById('val-banner').classList.remove('show');
+        }
+
+        function validateAndContinue() {
+            clearErrors();
+            const errs = [];
+            required.forEach(f => {
+                const el = document.getElementById(f.id);
+                if (!el) return;
+                if (!el.value.trim()) {
+                    errs.push(f.label);
+                    const w = document.getElementById('field-' + f.id);
+                    if (w) w.classList.add('err');
+                }
+            });
+
+            if (errs.length) {
+                const banner = document.getElementById('val-banner');
+                document.getElementById('val-msg').textContent = 'Please complete: ' + errs.join(', ') + '.';
+                banner.classList.add('show');
+                banner.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+                return;
+            }
+
+            // --- SAVE PAIN DIAGRAM AS IMAGE ---
+            const base64Image = generateCompositeImage();
+
+            // 1. Save to hidden input (for immediate use)
+            const hiddenInput = document.getElementById('pain_diagram_base64');
+            if (hiddenInput) {
+                hiddenInput.value = base64Image;
+            }
+
+            // 2. Save to localStorage (for final submission)
+            const painData = JSON.parse(localStorage.getItem('spinal_pain_draft') || '{}');
+            painData.pain_diagram_base64 = base64Image;
+            painData.has_pain_diagram = base64Image ? true : false;
+            localStorage.setItem('spinal_pain_draft', JSON.stringify(painData));
+
+            // Save state one last time
+            saveDraft();
+
+            const btn = document.querySelector('.btn-primary');
+            const originalText = btn.textContent;
+            btn.textContent = 'Continuing...';
+            btn.disabled = true;
+
+            setTimeout(() => {
+                btn.textContent = originalText;
+                btn.disabled = false;
+                toast(' Pain Profile saved! Moving to Assessments...');
+                window.location.href = 'assessments.html';
+            }, 600);
+        }
+        /* ── Auto draft save / load ──────────────────────── */
+        let _draftTimer = null;
+        function saveDraft() {
+            const data = {};
+            document.querySelectorAll('input:not([readonly]), select').forEach(el => {
+                if (el.id) data[el.id] = el.value;
+            });
+            try {
+                localStorage.setItem('spinal_demo_draft', JSON.stringify(data));
+            } catch (e) { /* silent */ }
+        }
+
+        function scheduleDraftSave() {
+            clearTimeout(_draftTimer);
+            _draftTimer = setTimeout(saveDraft, 800);
+        }
+
+        document.querySelectorAll('input:not([readonly]), select').forEach(el => {
+            el.addEventListener('input', scheduleDraftSave);
+            el.addEventListener('change', scheduleDraftSave);
+        });
+
+        function loadDraft() {
+            try {
+                const saved = localStorage.getItem('spinal_demo_draft');
+                if (!saved) return;
+                const data = JSON.parse(saved);
+                Object.entries(data).forEach(([id, val]) => {
+                    const el = document.getElementById(id);
+                    if (el && !el.readOnly) el.value = val;
+                });
+                document.getElementById('dob').dispatchEvent(new Event('change'));
+                calcBMI();
+            } catch (e) { }
+        }
+
+        /* ── Toast ──────────────────────────────────────── */
+        function toast(msg) {
+            const t = document.createElement('div');
+            t.textContent = msg;
+            Object.assign(t.style, {
+                position: 'fixed', bottom: '28px', right: '28px',
+                background: '#236464bf',
+                backdropFilter: 'blur(8px)',
+                WebkitBackdropFilter: 'blur(8px)',
+                color: '#fff', padding: '12px 22px', borderRadius: '50px',
+                fontSize: '0.83rem', fontWeight: '600',
+                boxShadow: '0 6px 24px rgba(35,100,100,0.3)',
+                zIndex: '9999', opacity: '0',
+                transform: 'translateY(12px)',
+                transition: 'all 0.3s ease',
+                fontFamily: 'Inter, sans-serif'
+            });
+            document.body.appendChild(t);
+            requestAnimationFrame(() => { t.style.opacity = '1'; t.style.transform = 'translateY(0)'; });
+            setTimeout(() => {
+                t.style.opacity = '0'; t.style.transform = 'translateY(12px)';
+                setTimeout(() => t.remove(), 350);
+            }, 2800);
+        }
+
+        loadDraft();
+
+
+
+
+
+
+
+        /* ── FORM SUBMISSION TO GOOGLE SHEETS ────────────────────────────── */
+        const WEBAPP_URL = 'https://script.google.com/macros/s/AKfycbzx726S2Bnkn7YsuZYrW1rYHWOLtG2nvAzjdkIooAODbp7JXUCnbO1S9nyKrm0uumdZ/exec';
+
+        /* ── Collect form data ───────────────────────────────────────────── */
+        function collectFormData() {
+            // Get all visible input/select/textarea values from the form
+            const data = {};
+
+            // All fields on the page
+            const fields = [
+                'full_name', 'dob', 'age', 'sex', 'marital_status',
+                'email', 'phone', 'address', 'city', 'state', 'zip',
+                'country', 'occupation',
+                'emergency_name', 'emergency_phone',
+                'insurance', 'ins_id', 'ins_group', 'ins_phone',
+                'pcp_name', 'pcp_phone', 'pcp_address', 'referring',
+                'height', 'weight', 'bmi', 'bmi_cat'
+            ];
+
+            fields.forEach(id => {
+                const el = document.getElementById(id);
+                if (el) data[id] = el.value;
+            });
+
+            return data;
+        }
+
+        /* ── Submit to Google Sheets ────────────────────────────────────── */
+        async function submitToSheets(formData) {
+            try {
+                const response = await fetch(WEBAPP_URL, {
+                    method: 'POST',
+                    // mode: 'no-cors', // Avoid CORS issues
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(formData)
+                });
+
+                return { success: true };
+            } catch (error) {
+                console.error('Submit error:', error);
+                return { success: false, error: error.message };
+            }
+        }
+
+        /* ── Final Submit Example (to be triggered at the end of all parts) ── */
+        function submitFinalForm() {
+            const formData = collectFormData();
+            formData.form_status = 'All Parts Completed';
+
+            submitToSheets(formData).then(result => {
+                if (result.success) {
+                    localStorage.removeItem('spinal_demo_draft');
+                    toast('✅ Intake completed and saved successfully!');
+                } else {
+                    toast('❌ Error saving. Please check your connection and try again.');
+                }
+            });
+        }
+
+        /* ── Validation and Continue Navigation ──────────────────────── */
+        function validateAndContinue() {
+            clearErrors();
+            const errs = [];
+            required.forEach(f => {
+                const el = document.getElementById(f.id);
+                if (!el) return;
+                if (!el.value.trim()) {
+                    errs.push(f.label);
+                    const w = document.getElementById('field-' + f.id);
+                    if (w) w.classList.add('err');
+                }
+            });
+            const emailEl = document.getElementById('email');
+            if (emailEl.value.trim() && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(emailEl.value.trim())) {
+                errs.push('Valid Email');
+                const w = document.getElementById('field-email');
+                if (w) w.classList.add('err');
+            }
+            if (errs.length) {
+                const banner = document.getElementById('val-banner');
+                document.getElementById('val-msg').textContent = 'Please complete: ' + errs.join(', ') + '.';
+                banner.classList.add('show');
+                banner.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+                return;
+            }
+
+            // Save draft manually on continue
+            saveDraft();
+
+            const btn = document.querySelector('.btn-primary');
+            const originalText = btn.textContent;
+            btn.textContent = 'Continuing...';
+            btn.disabled = true;
+
+            setTimeout(() => {
+                btn.textContent = originalText;
+                btn.disabled = false;
+                toast('✅ Demographics saved! Moving to Pain Profile...');
+
+                window.location.href = 'pain-profile.html';
+            }, 600);
+        }
+    </script>
+</body>
+
+</html>
