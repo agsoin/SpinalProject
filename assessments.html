@@ -1,0 +1,2030 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Assessments — AF AI Screening Tool | Dartmouth Hitchcock</title>
+    <meta name="description"
+        content="Complete your Atrial Fibrillation risk assessment using CHARGE-AF, C2HEST, EHRA, AFEQT, AFSS, CCS-SAF, AFSymp, and AF6 validated instruments.">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400;1,600&family=Inter:wght@300;400;500;600;700&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="af-intake.css">
+    <style>
+        /* Page-specific additions */
+        .section-page {
+            display: none;
+        }
+
+        .section-page.active {
+            display: block;
+            animation: fadeSlide 0.32s ease;
+        }
+
+        /* Info box for scoring context */
+        .info-box {
+            background: linear-gradient(135deg, rgba(11, 31, 46, 0.05) 0%, rgba(123, 30, 46, 0.04) 100%);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-sm);
+            padding: 14px 18px;
+            margin-bottom: 24px;
+            font-size: 0.8rem;
+            color: var(--text-mid);
+            line-height: 1.6;
+        }
+
+        .info-box strong {
+            color: var(--crimson-dark);
+        }
+
+        .divider-line {
+            height: 1px;
+            background: var(--border);
+            margin: 18px 0;
+        }
+
+        /* Likert scale specific */
+        .likert-row {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 6px;
+            margin-top: 6px;
+        }
+
+        .likert-btn {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 4px;
+            padding: 10px 4px;
+            border: 1.5px solid var(--border-mid);
+            border-radius: 10px;
+            cursor: pointer;
+            font-size: 0.72rem;
+            font-weight: 600;
+            color: var(--text-mid);
+            transition: var(--transition);
+            user-select: none;
+            text-align: center;
+        }
+
+        .likert-btn .l-num {
+            font-size: 1.1rem;
+            font-weight: 700;
+        }
+
+        .likert-btn:hover {
+            border-color: var(--crimson-mid);
+            color: var(--crimson-mid);
+            background: var(--crimson-faint);
+        }
+
+        .likert-btn.selected {
+            border-color: var(--crimson-dark);
+            background: var(--crimson-dark);
+            color: #fff;
+        }
+
+        /* Frequency select style */
+        .freq-row {
+            display: flex;
+            gap: 6px;
+            flex-wrap: wrap;
+        }
+
+        .freq-btn {
+            flex: 1;
+            min-width: 90px;
+            text-align: center;
+            padding: 9px 8px;
+            border: 1.5px solid var(--border-mid);
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 0.75rem;
+            font-weight: 600;
+            color: var(--text-mid);
+            transition: var(--transition);
+            user-select: none;
+        }
+
+        .freq-btn:hover {
+            border-color: var(--crimson-mid);
+            color: var(--crimson-mid);
+        }
+
+        .freq-btn.selected {
+            border-color: var(--crimson-dark);
+            background: var(--crimson-dark);
+            color: #fff;
+        }
+
+        /* Summary final card */
+        .summary-card {
+            background: linear-gradient(135deg, var(--navy) 0%, #1a0f16 50%, var(--crimson-dark) 100%);
+            border-radius: var(--radius);
+            padding: 32px;
+            color: #fff;
+            margin-bottom: 24px;
+        }
+
+        .summary-card h3 {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 1.8rem;
+            font-weight: 700;
+            margin-bottom: 6px;
+        }
+
+        .summary-card p {
+            font-size: 0.82rem;
+            color: rgba(255, 255, 255, 0.65);
+            line-height: 1.6;
+        }
+
+        .summary-scores {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+            margin-top: 24px;
+        }
+
+        .s-score-box {
+            background: rgba(255, 255, 255, 0.09);
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            border-radius: 12px;
+            padding: 14px 18px;
+        }
+
+        .s-score-box .s-name {
+            font-size: 0.7rem;
+            font-weight: 600;
+            color: rgba(255, 255, 255, 0.6);
+            letter-spacing: 0.06em;
+            text-transform: uppercase;
+        }
+
+        .s-score-box .s-val {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 1.9rem;
+            font-weight: 700;
+            color: #fff;
+            line-height: 1;
+            margin-top: 4px;
+        }
+
+        .s-score-box .s-interp {
+            font-size: 0.73rem;
+            color: rgba(255, 255, 255, 0.7);
+            margin-top: 4px;
+        }
+
+        @media (max-width: 640px) {
+            .likert-row {
+                grid-template-columns: repeat(5, 1fr);
+            }
+
+            .summary-scores {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="page-wrap">
+
+        <!-- ═══ PROGRESS NAV ═══ -->
+        <nav class="progress-band" aria-label="Assessment sections">
+            <div class="progress-inner">
+                <a href="index.html" class="back-link" id="back-home-link">← <span>Home</span></a>
+                <div class="progress-steps" id="progress-steps">
+                    <div class="step-node active" id="step-1" data-page="1">
+                        <div class="step-circle">1</div>
+                        <span class="step-label">Patient Info</span>
+                        <div class="step-bar"></div>
+                    </div>
+                    <div class="step-node upcoming" id="step-2" data-page="2">
+                        <div class="step-circle">2</div>
+                        <span class="step-label">CHARGE-AF</span>
+                    </div>
+                    <div class="step-node upcoming" id="step-3" data-page="3">
+                        <div class="step-circle">3</div>
+                        <span class="step-label">C₂HEST</span>
+                    </div>
+                    <div class="step-node upcoming" id="step-4" data-page="4">
+                        <div class="step-circle">4</div>
+                        <span class="step-label">EHRA</span>
+                    </div>
+                    <div class="step-node upcoming" id="step-5" data-page="5">
+                        <div class="step-circle">5</div>
+                        <span class="step-label">AFEQT</span>
+                    </div>
+                    <div class="step-node upcoming" id="step-6" data-page="6">
+                        <div class="step-circle">6</div>
+                        <span class="step-label">AFSS</span>
+                    </div>
+                    <div class="step-node upcoming" id="step-7" data-page="7">
+                        <div class="step-circle">7</div>
+                        <span class="step-label">CCS-SAF</span>
+                    </div>
+                    <div class="step-node upcoming" id="step-8" data-page="8">
+                        <div class="step-circle">8</div>
+                        <span class="step-label">AFSymp</span>
+                    </div>
+                    <div class="step-node upcoming" id="step-9" data-page="9">
+                        <div class="step-circle">9</div>
+                        <span class="step-label">AF6</span>
+                    </div>
+                </div>
+            </div>
+        </nav>
+
+        <!-- ═══ MAIN LAYOUT ═══ -->
+        <main class="main-content">
+
+            <!-- ────────────────────────────────────────────
+                 PAGE 1 — PATIENT INFO
+            ──────────────────────────────────────────── -->
+            <section class="section-page active" id="page-1">
+                <div class="form-card">
+                    <div class="card-topbar">
+                        <div class="topbar-icon">👤</div>
+                        <div class="topbar-text">
+                            <h2>Patient Information</h2>
+                            <p>Basic details for your clinical record — Dartmouth Hitchcock Medical Center</p>
+                        </div>
+                    </div>
+                    <div class="form-body">
+                        <div class="info-box">
+                            Please provide your basic information below. This is used to link your screening responses
+                            to your clinical record. Fields marked <span style="color:var(--crimson-light)">*</span> are
+                            required.
+                        </div>
+
+                        <!-- Name -->
+                        <div class="subsection">
+                            <div class="subsection-hd">
+                                <span class="tag">Full Name</span>
+                                <div class="rule"></div>
+                            </div>
+                            <div class="form-row c2">
+                                <div class="form-field">
+                                    <label for="pt-first">First Name <span class="req">*</span></label>
+                                    <input type="text" id="pt-first" name="pt-first" placeholder="e.g. Jane"
+                                        autocomplete="given-name">
+                                </div>
+                                <div class="form-field">
+                                    <label for="pt-last">Last Name <span class="req">*</span></label>
+                                    <input type="text" id="pt-last" name="pt-last" placeholder="e.g. Smith"
+                                        autocomplete="family-name">
+                                </div>
+                            </div>
+                            <div class="form-row c1">
+                                <div class="form-field">
+                                    <label for="pt-preferred">Preferred Name <span
+                                            class="label-note">(optional)</span></label>
+                                    <input type="text" id="pt-preferred" name="pt-preferred"
+                                        placeholder="If different from first name">
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Date of Birth & Age -->
+                        <div class="subsection">
+                            <div class="subsection-hd">
+                                <span class="tag">Date of Birth</span>
+                                <div class="rule"></div>
+                            </div>
+                            <div class="form-row c3">
+                                <div class="form-field">
+                                    <label for="pt-dob">Date of Birth <span class="req">*</span></label>
+                                    <input type="date" id="pt-dob" name="pt-dob" onchange="calcAgeFromDob()" max="">
+                                </div>
+                                <div class="form-field">
+                                    <label for="pt-age">Age (auto-calculated)</label>
+                                    <input type="number" id="pt-age" name="pt-age" readonly placeholder="—">
+                                </div>
+                                <div class="form-field">
+                                    <label for="pt-sex">Biological Sex <span class="req">*</span></label>
+                                    <select id="pt-sex" name="pt-sex">
+                                        <option value="">Select…</option>
+                                        <option value="male">Male</option>
+                                        <option value="female">Female</option>
+                                        <option value="intersex">Intersex / Other</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Demographics -->
+                        <div class="subsection">
+                            <div class="subsection-hd">
+                                <span class="tag">Demographics</span>
+                                <div class="rule"></div>
+                            </div>
+                            <div class="form-row c2">
+                                <div class="form-field">
+                                    <label for="pt-race">Race / Ethnicity <span class="label-note">(optional — used for
+                                            model calibration)</span></label>
+                                    <select id="pt-race" name="pt-race">
+                                        <option value="">Select…</option>
+                                        <option value="white">White / Caucasian</option>
+                                        <option value="black">Black / African American</option>
+                                        <option value="hispanic">Hispanic / Latino</option>
+                                        <option value="asian">Asian</option>
+                                        <option value="pi">Pacific Islander</option>
+                                        <option value="native">Native American / Alaska Native</option>
+                                        <option value="multiracial">Multiracial</option>
+                                        <option value="other">Other</option>
+                                        <option value="decline">Prefer not to say</option>
+                                    </select>
+                                </div>
+                                <div class="form-field">
+                                    <label for="pt-handedness">Primary Language</label>
+                                    <select id="pt-lang" name="pt-lang">
+                                        <option value="">Select…</option>
+                                        <option value="english">English</option>
+                                        <option value="spanish">Spanish</option>
+                                        <option value="french">French</option>
+                                        <option value="mandarin">Mandarin</option>
+                                        <option value="arabic">Arabic</option>
+                                        <option value="other">Other</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Contact Info -->
+                        <div class="subsection">
+                            <div class="subsection-hd">
+                                <span class="tag">Contact</span>
+                                <div class="rule"></div>
+                            </div>
+                            <div class="form-row c2">
+                                <div class="form-field">
+                                    <label for="pt-email">Email Address <span class="req">*</span></label>
+                                    <input type="email" id="pt-email" name="pt-email"
+                                        placeholder="e.g. jane.smith@email.com" autocomplete="email">
+                                </div>
+                                <div class="form-field">
+                                    <label for="pt-phone">Phone Number</label>
+                                    <input type="tel" id="pt-phone" name="pt-phone" placeholder="e.g. (603) 555-0100"
+                                        autocomplete="tel">
+                                </div>
+                            </div>
+                            <div class="form-row c2">
+                                <div class="form-field">
+                                    <label for="pt-mrn">MRN / Patient ID <span class="label-note">(if
+                                            known)</span></label>
+                                    <input type="text" id="pt-mrn" name="pt-mrn" placeholder="e.g. MRN-123456">
+                                </div>
+                                <div class="form-field">
+                                    <label for="pt-provider">Referring Provider <span class="label-note">(if
+                                            known)</span></label>
+                                    <input type="text" id="pt-provider" name="pt-provider"
+                                        placeholder="e.g. Dr. Rodriguez">
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Consent -->
+                        <div class="subsection">
+                            <div class="subsection-hd">
+                                <span class="tag">Consent</span>
+                                <div class="rule"></div>
+                            </div>
+                            <div class="survey-q">
+                                <label class="survey-label">I consent to my responses being used for clinical care and
+                                    research at Dartmouth Hitchcock Medical Center, in accordance with HIPAA
+                                    regulations. <span class="req">*</span></label>
+                                <div class="radio-group inline" id="pt-consent">
+                                    <label class="radio-opt" onclick="selectRadio(this,'pt-consent')">
+                                        <input type="radio" name="pt-consent" value="yes">
+                                        <span class="opt-indicator"></span> Yes, I consent
+                                    </label>
+                                    <label class="radio-opt" onclick="selectRadio(this,'pt-consent')">
+                                        <input type="radio" name="pt-consent" value="no">
+                                        <span class="opt-indicator"></span> No, I do not consent
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                    <div class="card-foot">
+                        <span class="step-counter">Section <strong>1</strong> of 9 &nbsp;·&nbsp; Patient
+                            Information</span>
+                        <button class="btn btn-primary" onclick="goToPage(2)" id="patinfo-next-btn">Next: CHARGE-AF
+                            →</button>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ────────────────────────────────────────────
+                 PAGE 2 — CHARGE-AF
+            ──────────────────────────────────────────── -->
+            <section class="section-page" id="page-2">
+                <div class="form-card">
+                    <div class="card-topbar">
+                        <div class="topbar-icon">📊</div>
+                        <div class="topbar-text">
+                            <h2>CHARGE-AF</h2>
+                            <p>Cohort for Heart and Aging Research in Genomic Epidemiology — AF Risk Score</p>
+                        </div>
+                    </div>
+                    <div class="form-body">
+                        <div class="info-box">
+                            The <strong>CHARGE-AF</strong> score is the most widely replicated prediction model for
+                            newly diagnosed/incident AF per ACC/AHA guidelines. It uses individual clinical variables as
+                            model features.<br><br>
+                            <strong>Note on age range:</strong> CHARGE-AF was calibrated on cohorts aged roughly 45–85
+                            (CHS, ARIC, Framingham). The age input below is pre-filled from your date of birth entered
+                            earlier. The model's published performance is strongest within this range — it remains
+                            informative outside it but with somewhat reduced calibration.
+                        </div>
+
+                        <!-- Anthropometrics -->
+                        <div class="subsection">
+                            <div class="subsection-hd">
+                                <span class="tag">Anthropometrics</span>
+                                <div class="rule"></div>
+                            </div>
+                            <div class="form-row c2">
+                                <div class="form-field">
+                                    <label for="charge-height">Height (cm) <span class="req">*</span></label>
+                                    <input type="number" id="charge-height" name="charge-height" min="100" max="250"
+                                        placeholder="e.g. 172">
+                                </div>
+                                <div class="form-field">
+                                    <label for="charge-weight">Weight (kg) <span class="req">*</span></label>
+                                    <input type="number" id="charge-weight" name="charge-weight" min="30" max="300"
+                                        placeholder="e.g. 82">
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Blood Pressure -->
+                        <div class="subsection">
+                            <div class="subsection-hd">
+                                <span class="tag">Blood Pressure</span>
+                                <div class="rule"></div>
+                            </div>
+                            <div class="form-row c2">
+                                <div class="form-field">
+                                    <label for="charge-sbp">Systolic BP (mmHg) <span class="req">*</span></label>
+                                    <input type="number" id="charge-sbp" name="charge-sbp" min="60" max="250"
+                                        placeholder="e.g. 128">
+                                </div>
+                                <div class="form-field">
+                                    <label for="charge-dbp">Diastolic BP (mmHg) <span class="req">*</span></label>
+                                    <input type="number" id="charge-dbp" name="charge-dbp" min="30" max="150"
+                                        placeholder="e.g. 78">
+                                </div>
+                            </div>
+                            <div class="form-row c1">
+                                <div class="form-field">
+                                    <label for="charge-bptx">Currently on antihypertensive medication? <span
+                                            class="req">*</span></label>
+                                    <select id="charge-bptx" name="charge-bptx">
+                                        <option value="">Select…</option>
+                                        <option value="yes">Yes</option>
+                                        <option value="no">No</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Medical History -->
+                        <div class="subsection">
+                            <div class="subsection-hd">
+                                <span class="tag">Medical History</span>
+                                <div class="rule"></div>
+                            </div>
+
+                            <div class="survey-q">
+                                <label class="survey-label">Do you have a current or prior history of
+                                    <strong>smoking</strong>?</label>
+                                <div class="radio-group inline" id="charge-smoking">
+                                    <label class="radio-opt" onclick="selectRadio(this,'charge-smoking')">
+                                        <input type="radio" name="charge-smoking" value="never">
+                                        <span class="opt-indicator"></span> Never smoked
+                                    </label>
+                                    <label class="radio-opt" onclick="selectRadio(this,'charge-smoking')">
+                                        <input type="radio" name="charge-smoking" value="former">
+                                        <span class="opt-indicator"></span> Former smoker
+                                    </label>
+                                    <label class="radio-opt" onclick="selectRadio(this,'charge-smoking')">
+                                        <input type="radio" name="charge-smoking" value="current">
+                                        <span class="opt-indicator"></span> Current smoker
+                                    </label>
+                                </div>
+                            </div>
+                            <div class="divider-line"></div>
+
+                            <div class="survey-q">
+                                <label class="survey-label">Have you been diagnosed with <strong>Type 2 Diabetes
+                                        Mellitus</strong>?</label>
+                                <div class="radio-group inline" id="charge-diabetes">
+                                    <label class="radio-opt" onclick="selectRadio(this,'charge-diabetes')">
+                                        <input type="radio" name="charge-diabetes" value="no">
+                                        <span class="opt-indicator"></span> No
+                                    </label>
+                                    <label class="radio-opt" onclick="selectRadio(this,'charge-diabetes')">
+                                        <input type="radio" name="charge-diabetes" value="yes">
+                                        <span class="opt-indicator"></span> Yes
+                                    </label>
+                                </div>
+                            </div>
+                            <div class="divider-line"></div>
+
+                            <div class="survey-q">
+                                <label class="survey-label">Have you ever had a <strong>Heart Attack (Myocardial
+                                        Infarction)</strong>?</label>
+                                <div class="radio-group inline" id="charge-mi">
+                                    <label class="radio-opt" onclick="selectRadio(this,'charge-mi')">
+                                        <input type="radio" name="charge-mi" value="no">
+                                        <span class="opt-indicator"></span> No
+                                    </label>
+                                    <label class="radio-opt" onclick="selectRadio(this,'charge-mi')">
+                                        <input type="radio" name="charge-mi" value="yes">
+                                        <span class="opt-indicator"></span> Yes
+                                    </label>
+                                </div>
+                            </div>
+                            <div class="divider-line"></div>
+
+                            <div class="survey-q">
+                                <label class="survey-label">Have you been diagnosed with <strong>Heart
+                                        Failure</strong>?</label>
+                                <div class="radio-group inline" id="charge-hf">
+                                    <label class="radio-opt" onclick="selectRadio(this,'charge-hf')">
+                                        <input type="radio" name="charge-hf" value="no">
+                                        <span class="opt-indicator"></span> No
+                                    </label>
+                                    <label class="radio-opt" onclick="selectRadio(this,'charge-hf')">
+                                        <input type="radio" name="charge-hf" value="yes">
+                                        <span class="opt-indicator"></span> Yes
+                                    </label>
+                                </div>
+                            </div>
+                            <div class="divider-line"></div>
+
+                            <div class="survey-q">
+                                <label class="survey-label">Do you have a current ECG showing evidence of <strong>Left
+                                        Ventricular Hypertrophy (LVH)</strong>?</label>
+                                <div class="radio-group inline" id="charge-lvh">
+                                    <label class="radio-opt" onclick="selectRadio(this,'charge-lvh')">
+                                        <input type="radio" name="charge-lvh" value="no">
+                                        <span class="opt-indicator"></span> No / Unknown
+                                    </label>
+                                    <label class="radio-opt" onclick="selectRadio(this,'charge-lvh')">
+                                        <input type="radio" name="charge-lvh" value="yes">
+                                        <span class="opt-indicator"></span> Yes
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div id="charge-score-display" class="score-display">
+                            <div>
+                                <div class="score-val" id="charge-score-val">—</div>
+                                <div class="score-label">CHARGE-AF Score</div>
+                            </div>
+                            <div>
+                                <div class="score-interp" id="charge-score-interp">Complete all fields to calculate
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card-foot">
+                        <span class="step-counter">Section <strong>2</strong> of 9 &nbsp;·&nbsp; CHARGE-AF Risk
+                            Variables</span>
+                        <div style="display:flex;gap:12px">
+                            <button class="btn btn-secondary" onclick="goToPage(1)">← Back</button>
+                            <button class="btn btn-primary" onclick="goToPage(3)" id="charge-next-btn">Next: C₂HEST
+                                →</button>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ────────────────────────────────────────────
+                 PAGE 3 — C₂HEST
+            ──────────────────────────────────────────── -->
+            <section class="section-page" id="page-3">
+                <div class="form-card">
+                    <div class="card-topbar">
+                        <div class="topbar-icon">🫀</div>
+                        <div class="topbar-text">
+                            <h2>C₂HEST Score</h2>
+                            <p>AF Prediction Score — ACC/AHA Guideline Recognised</p>
+                        </div>
+                    </div>
+                    <div class="form-body">
+                        <div class="info-box">
+                            The <strong>C₂HEST score</strong> (0–8) is an ACC/AHA AF guideline recognised prediction
+                            instrument. Each positive criterion adds points toward your total score.
+                            <br><br>
+                            <strong>C₂</strong> = CAD/COPD (2 pts) · <strong>H</strong> = Hypertension ·
+                            <strong>E</strong> = Elderly ≥75 · <strong>S</strong> = Systolic HF · <strong>T</strong> =
+                            Hyperthyroidism
+                        </div>
+
+                        <div class="survey-q">
+                            <label class="survey-label"><span class="q-num">C₂</span> Do you have <strong>Coronary
+                                    Artery Disease (CAD)</strong> and/or <strong>COPD</strong>? <em>(2
+                                    points)</em></label>
+                            <div class="radio-group inline" id="chest-cad">
+                                <label class="radio-opt" onclick="selectRadio(this,'chest-cad'); calcChest()">
+                                    <input type="radio" name="chest-cad" value="0">
+                                    <span class="opt-indicator"></span> No
+                                </label>
+                                <label class="radio-opt" onclick="selectRadio(this,'chest-cad'); calcChest()">
+                                    <input type="radio" name="chest-cad" value="1">
+                                    <span class="opt-indicator"></span> CAD only
+                                </label>
+                                <label class="radio-opt" onclick="selectRadio(this,'chest-cad'); calcChest()">
+                                    <input type="radio" name="chest-cad" value="1b">
+                                    <span class="opt-indicator"></span> COPD only
+                                </label>
+                                <label class="radio-opt" onclick="selectRadio(this,'chest-cad'); calcChest()">
+                                    <input type="radio" name="chest-cad" value="2">
+                                    <span class="opt-indicator"></span> Both CAD &amp; COPD
+                                </label>
+                            </div>
+                        </div>
+                        <div class="divider-line"></div>
+
+                        <div class="survey-q">
+                            <label class="survey-label"><span class="q-num">H</span> Do you have
+                                <strong>Hypertension</strong>? <em>(1 point)</em></label>
+                            <div class="radio-group inline" id="chest-htn">
+                                <label class="radio-opt" onclick="selectRadio(this,'chest-htn'); calcChest()">
+                                    <input type="radio" name="chest-htn" value="0">
+                                    <span class="opt-indicator"></span> No
+                                </label>
+                                <label class="radio-opt" onclick="selectRadio(this,'chest-htn'); calcChest()">
+                                    <input type="radio" name="chest-htn" value="1">
+                                    <span class="opt-indicator"></span> Yes
+                                </label>
+                            </div>
+                        </div>
+                        <div class="divider-line"></div>
+
+                        <div class="survey-q">
+                            <label class="survey-label"><span class="q-num">E</span> Are you <strong>75 years of age or
+                                    older</strong>? <em>(2 points)</em></label>
+                            <div class="radio-group inline" id="chest-elderly">
+                                <label class="radio-opt" onclick="selectRadio(this,'chest-elderly'); calcChest()">
+                                    <input type="radio" name="chest-elderly" value="0">
+                                    <span class="opt-indicator"></span> No, under 75
+                                </label>
+                                <label class="radio-opt" onclick="selectRadio(this,'chest-elderly'); calcChest()">
+                                    <input type="radio" name="chest-elderly" value="2">
+                                    <span class="opt-indicator"></span> Yes, 75 or older
+                                </label>
+                            </div>
+                        </div>
+                        <div class="divider-line"></div>
+
+                        <div class="survey-q">
+                            <label class="survey-label"><span class="q-num">S</span> Have you been diagnosed with
+                                <strong>Systolic Heart Failure</strong>? <em>(2 points)</em></label>
+                            <div class="radio-group inline" id="chest-hf">
+                                <label class="radio-opt" onclick="selectRadio(this,'chest-hf'); calcChest()">
+                                    <input type="radio" name="chest-hf" value="0">
+                                    <span class="opt-indicator"></span> No
+                                </label>
+                                <label class="radio-opt" onclick="selectRadio(this,'chest-hf'); calcChest()">
+                                    <input type="radio" name="chest-hf" value="2">
+                                    <span class="opt-indicator"></span> Yes
+                                </label>
+                            </div>
+                        </div>
+                        <div class="divider-line"></div>
+
+                        <div class="survey-q">
+                            <label class="survey-label"><span class="q-num">T</span> Have you been diagnosed with
+                                <strong>Hyperthyroidism</strong> (overactive thyroid)? <em>(1 point)</em></label>
+                            <div class="radio-group inline" id="chest-thyroid">
+                                <label class="radio-opt" onclick="selectRadio(this,'chest-thyroid'); calcChest()">
+                                    <input type="radio" name="chest-thyroid" value="0">
+                                    <span class="opt-indicator"></span> No
+                                </label>
+                                <label class="radio-opt" onclick="selectRadio(this,'chest-thyroid'); calcChest()">
+                                    <input type="radio" name="chest-thyroid" value="1">
+                                    <span class="opt-indicator"></span> Yes
+                                </label>
+                            </div>
+                        </div>
+
+                        <div id="chest-score-display" class="score-display">
+                            <div>
+                                <div class="score-val" id="chest-score-val">0</div>
+                                <div class="score-label">C₂HEST Score (out of 8)</div>
+                            </div>
+                            <div>
+                                <div class="score-interp" id="chest-score-interp">Score updates as you answer</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card-foot">
+                        <span class="step-counter">Section <strong>3</strong> of 9 &nbsp;·&nbsp; C₂HEST Score</span>
+                        <div style="display:flex;gap:12px">
+                            <button class="btn btn-secondary" onclick="goToPage(2)">← Back</button>
+                            <button class="btn btn-primary" onclick="goToPage(4)">Next: EHRA →</button>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ────────────────────────────────────────────
+                 PAGE 4 — Modified EHRA Symptom Scale
+            ──────────────────────────────────────────── -->
+            <section class="section-page" id="page-4">
+                <div class="form-card">
+                    <div class="card-topbar">
+                        <div class="topbar-icon">🩺</div>
+                        <div class="topbar-text">
+                            <h2>Modified EHRA Scale</h2>
+                            <p>European Heart Rhythm Association — AF Symptom Classification</p>
+                        </div>
+                    </div>
+                    <div class="form-body">
+                        <div class="info-box">
+                            The <strong>Modified EHRA Symptom Scale</strong> grades patients from essentially
+                            asymptomatic through increasingly severe limitation from AF. It has been validated against
+                            AF-specific quality-of-life measures including AFEQT. Please rate <em>how much each symptom
+                                affects your daily life</em>.
+                        </div>
+
+                        <!-- Underlying symptom capture (rather than just asking EHRA class) -->
+                        <div class="survey-q">
+                            <label class="survey-label"><span class="q-num">1</span> <strong>Palpitations</strong> —
+                                racing, fluttering, or irregular heartbeat sensation</label>
+                            <p class="survey-hint">How much do palpitations affect your normal daily activities?</p>
+                            <div class="likert-row" id="ehra-palpitations">
+                                <div class="likert-btn" onclick="selectLikert(this,'ehra-palpitations',0)" data-val="0">
+                                    <span class="l-num">0</span>None
+                                </div>
+                                <div class="likert-btn" onclick="selectLikert(this,'ehra-palpitations',1)" data-val="1">
+                                    <span class="l-num">1</span>Mild
+                                </div>
+                                <div class="likert-btn" onclick="selectLikert(this,'ehra-palpitations',2)" data-val="2">
+                                    <span class="l-num">2</span>Moderate
+                                </div>
+                                <div class="likert-btn" onclick="selectLikert(this,'ehra-palpitations',3)" data-val="3">
+                                    <span class="l-num">3</span>Severe
+                                </div>
+                                <div class="likert-btn" onclick="selectLikert(this,'ehra-palpitations',4)" data-val="4">
+                                    <span class="l-num">4</span>Disabling
+                                </div>
+                            </div>
+                            <div class="scale-labels"><span>No effect</span><span>Cannot do normal activities</span>
+                            </div>
+                        </div>
+                        <div class="divider-line"></div>
+
+                        <div class="survey-q">
+                            <label class="survey-label"><span class="q-num">2</span> <strong>Fatigue /
+                                    Tiredness</strong></label>
+                            <p class="survey-hint">How much does fatigue related to your heart condition affect your
+                                daily life?</p>
+                            <div class="likert-row" id="ehra-fatigue">
+                                <div class="likert-btn" onclick="selectLikert(this,'ehra-fatigue',0)" data-val="0"><span
+                                        class="l-num">0</span>None</div>
+                                <div class="likert-btn" onclick="selectLikert(this,'ehra-fatigue',1)" data-val="1"><span
+                                        class="l-num">1</span>Mild</div>
+                                <div class="likert-btn" onclick="selectLikert(this,'ehra-fatigue',2)" data-val="2"><span
+                                        class="l-num">2</span>Moderate</div>
+                                <div class="likert-btn" onclick="selectLikert(this,'ehra-fatigue',3)" data-val="3"><span
+                                        class="l-num">3</span>Severe</div>
+                                <div class="likert-btn" onclick="selectLikert(this,'ehra-fatigue',4)" data-val="4"><span
+                                        class="l-num">4</span>Disabling</div>
+                            </div>
+                            <div class="scale-labels"><span>No effect</span><span>Cannot do normal activities</span>
+                            </div>
+                        </div>
+                        <div class="divider-line"></div>
+
+                        <div class="survey-q">
+                            <label class="survey-label"><span class="q-num">3</span> <strong>Dyspnoea</strong> —
+                                shortness of breath</label>
+                            <p class="survey-hint">How limited are you by breathlessness during activities?</p>
+                            <div class="likert-row" id="ehra-dyspnea">
+                                <div class="likert-btn" onclick="selectLikert(this,'ehra-dyspnea',0)" data-val="0"><span
+                                        class="l-num">0</span>None</div>
+                                <div class="likert-btn" onclick="selectLikert(this,'ehra-dyspnea',1)" data-val="1"><span
+                                        class="l-num">1</span>Mild</div>
+                                <div class="likert-btn" onclick="selectLikert(this,'ehra-dyspnea',2)" data-val="2"><span
+                                        class="l-num">2</span>Moderate</div>
+                                <div class="likert-btn" onclick="selectLikert(this,'ehra-dyspnea',3)" data-val="3"><span
+                                        class="l-num">3</span>Severe</div>
+                                <div class="likert-btn" onclick="selectLikert(this,'ehra-dyspnea',4)" data-val="4"><span
+                                        class="l-num">4</span>Disabling</div>
+                            </div>
+                            <div class="scale-labels"><span>No effect</span><span>Cannot do normal activities</span>
+                            </div>
+                        </div>
+                        <div class="divider-line"></div>
+
+                        <div class="survey-q">
+                            <label class="survey-label"><span class="q-num">4</span> <strong>Dizziness /
+                                    Presyncope</strong></label>
+                            <p class="survey-hint">How much dizziness or near-fainting have you experienced?</p>
+                            <div class="likert-row" id="ehra-dizziness">
+                                <div class="likert-btn" onclick="selectLikert(this,'ehra-dizziness',0)" data-val="0">
+                                    <span class="l-num">0</span>None
+                                </div>
+                                <div class="likert-btn" onclick="selectLikert(this,'ehra-dizziness',1)" data-val="1">
+                                    <span class="l-num">1</span>Mild
+                                </div>
+                                <div class="likert-btn" onclick="selectLikert(this,'ehra-dizziness',2)" data-val="2">
+                                    <span class="l-num">2</span>Moderate
+                                </div>
+                                <div class="likert-btn" onclick="selectLikert(this,'ehra-dizziness',3)" data-val="3">
+                                    <span class="l-num">3</span>Severe
+                                </div>
+                                <div class="likert-btn" onclick="selectLikert(this,'ehra-dizziness',4)" data-val="4">
+                                    <span class="l-num">4</span>Disabling
+                                </div>
+                            </div>
+                            <div class="scale-labels"><span>No effect</span><span>Cannot do normal activities</span>
+                            </div>
+                        </div>
+                        <div class="divider-line"></div>
+
+                        <div class="survey-q">
+                            <label class="survey-label"><span class="q-num">5</span> <strong>Chest Discomfort /
+                                    Pain</strong></label>
+                            <p class="survey-hint">How much chest discomfort related to your heart do you experience?
+                            </p>
+                            <div class="likert-row" id="ehra-chest">
+                                <div class="likert-btn" onclick="selectLikert(this,'ehra-chest',0)" data-val="0"><span
+                                        class="l-num">0</span>None</div>
+                                <div class="likert-btn" onclick="selectLikert(this,'ehra-chest',1)" data-val="1"><span
+                                        class="l-num">1</span>Mild</div>
+                                <div class="likert-btn" onclick="selectLikert(this,'ehra-chest',2)" data-val="2"><span
+                                        class="l-num">2</span>Moderate</div>
+                                <div class="likert-btn" onclick="selectLikert(this,'ehra-chest',3)" data-val="3"><span
+                                        class="l-num">3</span>Severe</div>
+                                <div class="likert-btn" onclick="selectLikert(this,'ehra-chest',4)" data-val="4"><span
+                                        class="l-num">4</span>Disabling</div>
+                            </div>
+                            <div class="scale-labels"><span>No effect</span><span>Cannot do normal activities</span>
+                            </div>
+                        </div>
+                        <div class="divider-line"></div>
+
+                        <div class="survey-q">
+                            <label class="survey-label"><span class="q-num">6</span> Overall <strong>Limitation of
+                                    Normal Activities</strong> due to heart symptoms</label>
+                            <div class="radio-group" id="ehra-overall">
+                                <label class="radio-opt" onclick="selectRadio(this,'ehra-overall')">
+                                    <input type="radio" name="ehra-overall" value="1">
+                                    <span class="opt-indicator"></span>
+                                    <div><strong>EHRA 1 — Asymptomatic.</strong> Normal daily activities not affected at
+                                        all.</div>
+                                </label>
+                                <label class="radio-opt" onclick="selectRadio(this,'ehra-overall')">
+                                    <input type="radio" name="ehra-overall" value="2a">
+                                    <span class="opt-indicator"></span>
+                                    <div><strong>EHRA 2a — Mild.</strong> Normal daily activity not affected but patient
+                                        is troubled by symptoms.</div>
+                                </label>
+                                <label class="radio-opt" onclick="selectRadio(this,'ehra-overall')">
+                                    <input type="radio" name="ehra-overall" value="2b">
+                                    <span class="opt-indicator"></span>
+                                    <div><strong>EHRA 2b — Moderate.</strong> Normal daily activity mildly affected.
+                                    </div>
+                                </label>
+                                <label class="radio-opt" onclick="selectRadio(this,'ehra-overall')">
+                                    <input type="radio" name="ehra-overall" value="3">
+                                    <span class="opt-indicator"></span>
+                                    <div><strong>EHRA 3 — Severe.</strong> Normal daily activity severely affected.
+                                    </div>
+                                </label>
+                                <label class="radio-opt" onclick="selectRadio(this,'ehra-overall')">
+                                    <input type="radio" name="ehra-overall" value="4">
+                                    <span class="opt-indicator"></span>
+                                    <div><strong>EHRA 4 — Disabling.</strong> Normal daily activity discontinued;
+                                        patient cannot carry out daily activities.</div>
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card-foot">
+                        <span class="step-counter">Section <strong>4</strong> of 9 &nbsp;·&nbsp; EHRA Symptom
+                            Scale</span>
+                        <div style="display:flex;gap:12px">
+                            <button class="btn btn-secondary" onclick="goToPage(3)">← Back</button>
+                            <button class="btn btn-primary" onclick="goToPage(5)">Next: AFEQT →</button>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ────────────────────────────────────────────
+                 PAGE 5 — AFEQT
+            ──────────────────────────────────────────── -->
+            <section class="section-page" id="page-5">
+                <div class="form-card">
+                    <div class="card-topbar">
+                        <div class="topbar-icon">📝</div>
+                        <div class="topbar-text">
+                            <h2>AFEQT</h2>
+                            <p>Atrial Fibrillation Effect on QualiTy-of-Life — 20-Item Validated Questionnaire</p>
+                        </div>
+                    </div>
+                    <div class="form-body">
+                        <div class="info-box">
+                            The <strong>AFEQT</strong> is a 20-item validated AF-specific quality-of-life questionnaire
+                            with strong internal consistency. It covers AF symptoms, daily activity limitations,
+                            treatment concerns, and treatment satisfaction.<br><br>
+                            For each item, rate how much AF has <em>bothered you during the last 4 weeks</em>. <strong>1
+                                = Not at all bothered · 7 = Extremely bothered</strong>
+                        </div>
+
+                        <!-- Domain 1: AF Symptoms -->
+                        <div class="subsection">
+                            <div class="subsection-hd">
+                                <span class="tag">Domain 1 — AF Symptoms</span>
+                                <div class="rule"></div>
+                            </div>
+
+                            <div id="afeqt-symptom-qs"></div>
+                        </div>
+
+                        <!-- Domain 2: Daily Activities -->
+                        <div class="subsection">
+                            <div class="subsection-hd">
+                                <span class="tag">Domain 2 — Daily Activities</span>
+                                <div class="rule"></div>
+                            </div>
+                            <div id="afeqt-activity-qs"></div>
+                        </div>
+
+                        <!-- Domain 3: Treatment Concerns -->
+                        <div class="subsection">
+                            <div class="subsection-hd">
+                                <span class="tag">Domain 3 — Treatment Concerns</span>
+                                <div class="rule"></div>
+                            </div>
+                            <div id="afeqt-treatment-qs"></div>
+                        </div>
+
+                        <!-- Domain 4: Treatment Satisfaction -->
+                        <div class="subsection">
+                            <div class="subsection-hd">
+                                <span class="tag">Domain 4 — Treatment Satisfaction</span>
+                                <div class="rule"></div>
+                            </div>
+                            <div id="afeqt-satisfaction-qs"></div>
+                        </div>
+
+                        <div id="afeqt-score-display" class="score-display">
+                            <div>
+                                <div class="score-val" id="afeqt-score-val">—</div>
+                                <div class="score-label">AFEQT Summary Score (0–100)</div>
+                            </div>
+                            <div>
+                                <div class="score-interp" id="afeqt-score-interp">Higher = better quality of life</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card-foot">
+                        <span class="step-counter">Section <strong>5</strong> of 9 &nbsp;·&nbsp; AFEQT</span>
+                        <div style="display:flex;gap:12px">
+                            <button class="btn btn-secondary" onclick="goToPage(4)">← Back</button>
+                            <button class="btn btn-primary" onclick="goToPage(6)">Next: AFSS →</button>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ────────────────────────────────────────────
+                 PAGE 6 — AFSS (Toronto)
+            ──────────────────────────────────────────── -->
+            <section class="section-page" id="page-6">
+                <div class="form-card">
+                    <div class="card-topbar">
+                        <div class="topbar-icon">🏥</div>
+                        <div class="topbar-text">
+                            <h2>AFSS — Toronto</h2>
+                            <p>University of Toronto Atrial Fibrillation Severity Scale</p>
+                        </div>
+                    </div>
+                    <div class="form-body">
+                        <div class="info-box">
+                            The <strong>AFSS</strong> captures a combination of AF burden and patient symptoms. It has
+                            been repeatedly validated and correlates with EHRA and CCS-SAF classifications. Please
+                            answer about your AF episodes <em>over the past month</em>.
+                        </div>
+
+                        <!-- AF Burden -->
+                        <div class="subsection">
+                            <div class="subsection-hd">
+                                <span class="tag">AF Burden</span>
+                                <div class="rule"></div>
+                            </div>
+
+                            <div class="survey-q">
+                                <label class="survey-label"><span class="q-num">1</span> How often do you have AF
+                                    episodes?</label>
+                                <div class="radio-group" id="afss-frequency">
+                                    <label class="radio-opt" onclick="selectRadio(this,'afss-frequency')">
+                                        <input type="radio" name="afss-frequency" value="0">
+                                        <span class="opt-indicator"></span> No episodes in past month
+                                    </label>
+                                    <label class="radio-opt" onclick="selectRadio(this,'afss-frequency')">
+                                        <input type="radio" name="afss-frequency" value="1">
+                                        <span class="opt-indicator"></span> Less than once per month
+                                    </label>
+                                    <label class="radio-opt" onclick="selectRadio(this,'afss-frequency')">
+                                        <input type="radio" name="afss-frequency" value="2">
+                                        <span class="opt-indicator"></span> 1–3 times per month
+                                    </label>
+                                    <label class="radio-opt" onclick="selectRadio(this,'afss-frequency')">
+                                        <input type="radio" name="afss-frequency" value="3">
+                                        <span class="opt-indicator"></span> Once per week
+                                    </label>
+                                    <label class="radio-opt" onclick="selectRadio(this,'afss-frequency')">
+                                        <input type="radio" name="afss-frequency" value="4">
+                                        <span class="opt-indicator"></span> More than once per week
+                                    </label>
+                                    <label class="radio-opt" onclick="selectRadio(this,'afss-frequency')">
+                                        <input type="radio" name="afss-frequency" value="5">
+                                        <span class="opt-indicator"></span> Daily / Continuous
+                                    </label>
+                                </div>
+                            </div>
+                            <div class="divider-line"></div>
+
+                            <div class="survey-q">
+                                <label class="survey-label"><span class="q-num">2</span> How long do your AF episodes
+                                    typically last?</label>
+                                <div class="radio-group" id="afss-duration">
+                                    <label class="radio-opt" onclick="selectRadio(this,'afss-duration')">
+                                        <input type="radio" name="afss-duration" value="0">
+                                        <span class="opt-indicator"></span> None / No episodes
+                                    </label>
+                                    <label class="radio-opt" onclick="selectRadio(this,'afss-duration')">
+                                        <input type="radio" name="afss-duration" value="1">
+                                        <span class="opt-indicator"></span> Less than 1 hour
+                                    </label>
+                                    <label class="radio-opt" onclick="selectRadio(this,'afss-duration')">
+                                        <input type="radio" name="afss-duration" value="2">
+                                        <span class="opt-indicator"></span> 1–24 hours
+                                    </label>
+                                    <label class="radio-opt" onclick="selectRadio(this,'afss-duration')">
+                                        <input type="radio" name="afss-duration" value="3">
+                                        <span class="opt-indicator"></span> More than 24 hours but self-terminating
+                                    </label>
+                                    <label class="radio-opt" onclick="selectRadio(this,'afss-duration')">
+                                        <input type="radio" name="afss-duration" value="4">
+                                        <span class="opt-indicator"></span> Requires cardioversion / medication to
+                                        terminate
+                                    </label>
+                                    <label class="radio-opt" onclick="selectRadio(this,'afss-duration')">
+                                        <input type="radio" name="afss-duration" value="5">
+                                        <span class="opt-indicator"></span> Permanent / Continuous AF
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- AF Symptoms -->
+                        <div class="subsection">
+                            <div class="subsection-hd">
+                                <span class="tag">AF Symptoms</span>
+                                <div class="rule"></div>
+                            </div>
+
+                            <div class="survey-q">
+                                <label class="survey-label"><span class="q-num">3</span> Overall symptom severity during
+                                    AF episodes (0 = none, 10 = worst imaginable)</label>
+                                <div class="scale-row" id="afss-severity">
+                                    <div class="scale-btn" onclick="selectScale(this,'afss-severity')">0</div>
+                                    <div class="scale-btn" onclick="selectScale(this,'afss-severity')">1</div>
+                                    <div class="scale-btn" onclick="selectScale(this,'afss-severity')">2</div>
+                                    <div class="scale-btn" onclick="selectScale(this,'afss-severity')">3</div>
+                                    <div class="scale-btn" onclick="selectScale(this,'afss-severity')">4</div>
+                                    <div class="scale-btn" onclick="selectScale(this,'afss-severity')">5</div>
+                                    <div class="scale-btn" onclick="selectScale(this,'afss-severity')">6</div>
+                                    <div class="scale-btn" onclick="selectScale(this,'afss-severity')">7</div>
+                                    <div class="scale-btn" onclick="selectScale(this,'afss-severity')">8</div>
+                                    <div class="scale-btn" onclick="selectScale(this,'afss-severity')">9</div>
+                                    <div class="scale-btn" onclick="selectScale(this,'afss-severity')">10</div>
+                                </div>
+                                <div class="scale-labels"><span>No symptoms</span><span>Worst imaginable</span></div>
+                            </div>
+                            <div class="divider-line"></div>
+
+                            <div class="survey-q">
+                                <label class="survey-label"><span class="q-num">4</span> How much does AF interfere with
+                                    your quality of life? (0 = not at all, 10 = extremely)</label>
+                                <div class="scale-row" id="afss-qol">
+                                    <div class="scale-btn" onclick="selectScale(this,'afss-qol')">0</div>
+                                    <div class="scale-btn" onclick="selectScale(this,'afss-qol')">1</div>
+                                    <div class="scale-btn" onclick="selectScale(this,'afss-qol')">2</div>
+                                    <div class="scale-btn" onclick="selectScale(this,'afss-qol')">3</div>
+                                    <div class="scale-btn" onclick="selectScale(this,'afss-qol')">4</div>
+                                    <div class="scale-btn" onclick="selectScale(this,'afss-qol')">5</div>
+                                    <div class="scale-btn" onclick="selectScale(this,'afss-qol')">6</div>
+                                    <div class="scale-btn" onclick="selectScale(this,'afss-qol')">7</div>
+                                    <div class="scale-btn" onclick="selectScale(this,'afss-qol')">8</div>
+                                    <div class="scale-btn" onclick="selectScale(this,'afss-qol')">9</div>
+                                    <div class="scale-btn" onclick="selectScale(this,'afss-qol')">10</div>
+                                </div>
+                                <div class="scale-labels"><span>No interference</span><span>Extreme interference</span>
+                                </div>
+                            </div>
+                            <div class="divider-line"></div>
+
+                            <div class="survey-q">
+                                <label class="survey-label"><span class="q-num">5</span> In the past month, how many
+                                    times did you visit the Emergency Department specifically for AF?</label>
+                                <div class="form-row c2">
+                                    <div class="form-field">
+                                        <input type="number" id="afss-ed" name="afss-ed" min="0" max="20"
+                                            placeholder="0" style="max-width:180px">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="divider-line"></div>
+
+                            <div class="survey-q">
+                                <label class="survey-label"><span class="q-num">6</span> In the past month, how many
+                                    days were you hospitalized due to AF?</label>
+                                <div class="form-row c2">
+                                    <div class="form-field">
+                                        <input type="number" id="afss-hosp" name="afss-hosp" min="0" max="31"
+                                            placeholder="0" style="max-width:180px">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card-foot">
+                        <span class="step-counter">Section <strong>6</strong> of 9 &nbsp;·&nbsp; AFSS (Toronto)</span>
+                        <div style="display:flex;gap:12px">
+                            <button class="btn btn-secondary" onclick="goToPage(5)">← Back</button>
+                            <button class="btn btn-primary" onclick="goToPage(7)">Next: CCS-SAF →</button>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ────────────────────────────────────────────
+                 PAGE 7 — CCS-SAF
+            ──────────────────────────────────────────── -->
+            <section class="section-page" id="page-7">
+                <div class="form-card">
+                    <div class="card-topbar">
+                        <div class="topbar-icon">🏥</div>
+                        <div class="topbar-text">
+                            <h2>CCS-SAF Scale</h2>
+                            <p>Canadian Cardiovascular Society — Severity in Atrial Fibrillation</p>
+                        </div>
+                    </div>
+                    <div class="form-body">
+                        <div class="info-box">
+                            The <strong>CCS-SAF</strong> is a simple clinician-rated 0–4 ordinal scale validated in 484
+                            patients with documented AF. It correlates with AF symptom severity, quality of life and
+                            healthcare utilisation. Please select the description that best matches your experience.
+                        </div>
+
+                        <div class="survey-q">
+                            <label class="survey-label">Which of the following best describes how your <strong>AF
+                                    symptoms affect your daily life</strong>?</label>
+                            <div class="radio-group" id="ccs-saf">
+                                <label class="radio-opt" onclick="selectRadio(this,'ccs-saf')">
+                                    <input type="radio" name="ccs-saf" value="0">
+                                    <span class="opt-indicator"></span>
+                                    <div>
+                                        <strong>Class 0 — Asymptomatic.</strong>
+                                        <div style="font-size:0.8rem;color:var(--text-light);margin-top:3px">AF is not
+                                            associated with any symptoms.</div>
+                                    </div>
+                                </label>
+                                <label class="radio-opt" onclick="selectRadio(this,'ccs-saf')">
+                                    <input type="radio" name="ccs-saf" value="1">
+                                    <span class="opt-indicator"></span>
+                                    <div>
+                                        <strong>Class 1 — Minimal symptoms.</strong>
+                                        <div style="font-size:0.8rem;color:var(--text-light);margin-top:3px">AF-related
+                                            symptoms exist but do not affect normal activities; symptoms are minimally
+                                            troublesome.</div>
+                                    </div>
+                                </label>
+                                <label class="radio-opt" onclick="selectRadio(this,'ccs-saf')">
+                                    <input type="radio" name="ccs-saf" value="2">
+                                    <span class="opt-indicator"></span>
+                                    <div>
+                                        <strong>Class 2 — Mild symptoms.</strong>
+                                        <div style="font-size:0.8rem;color:var(--text-light);margin-top:3px">AF-related
+                                            symptoms modestly affect normal activities; the patient is not troubled by
+                                            symptoms on most days.</div>
+                                    </div>
+                                </label>
+                                <label class="radio-opt" onclick="selectRadio(this,'ccs-saf')">
+                                    <input type="radio" name="ccs-saf" value="3">
+                                    <span class="opt-indicator"></span>
+                                    <div>
+                                        <strong>Class 3 — Moderate symptoms.</strong>
+                                        <div style="font-size:0.8rem;color:var(--text-light);margin-top:3px">AF-related
+                                            symptoms significantly affect normal activities; patient troubled by
+                                            symptoms frequently.</div>
+                                    </div>
+                                </label>
+                                <label class="radio-opt" onclick="selectRadio(this,'ccs-saf')">
+                                    <input type="radio" name="ccs-saf" value="4">
+                                    <span class="opt-indicator"></span>
+                                    <div>
+                                        <strong>Class 4 — Severe symptoms.</strong>
+                                        <div style="font-size:0.8rem;color:var(--text-light);margin-top:3px">Normal
+                                            activities discontinued because of AF-related symptoms; patient unable to
+                                            carry out activities.</div>
+                                    </div>
+                                </label>
+                            </div>
+                        </div>
+
+                        <!-- Additional CCS context questions -->
+                        <div class="divider-line"></div>
+                        <div class="survey-q">
+                            <label class="survey-label">Are you currently seeking treatment specifically for your AF
+                                symptoms?</label>
+                            <div class="radio-group inline" id="ccs-treatment-seeking">
+                                <label class="radio-opt" onclick="selectRadio(this,'ccs-treatment-seeking')">
+                                    <input type="radio" name="ccs-treatment-seeking" value="no">
+                                    <span class="opt-indicator"></span> No
+                                </label>
+                                <label class="radio-opt" onclick="selectRadio(this,'ccs-treatment-seeking')">
+                                    <input type="radio" name="ccs-treatment-seeking" value="yes_mild">
+                                    <span class="opt-indicator"></span> Yes — mild treatment (medication)
+                                </label>
+                                <label class="radio-opt" onclick="selectRadio(this,'ccs-treatment-seeking')">
+                                    <input type="radio" name="ccs-treatment-seeking" value="yes_active">
+                                    <span class="opt-indicator"></span> Yes — active treatment (ablation /
+                                    cardioversion)
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card-foot">
+                        <span class="step-counter">Section <strong>7</strong> of 9 &nbsp;·&nbsp; CCS-SAF</span>
+                        <div style="display:flex;gap:12px">
+                            <button class="btn btn-secondary" onclick="goToPage(6)">← Back</button>
+                            <button class="btn btn-primary" onclick="goToPage(8)">Next: AFSymp →</button>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ────────────────────────────────────────────
+                 PAGE 8 — AFSymp
+            ──────────────────────────────────────────── -->
+            <section class="section-page" id="page-8">
+                <div class="form-card">
+                    <div class="card-topbar">
+                        <div class="topbar-icon">💓</div>
+                        <div class="topbar-text">
+                            <h2>AFSymp</h2>
+                            <p>Validated 11-Item Patient-Reported AF Symptom Questionnaire — 1-Week Recall</p>
+                        </div>
+                    </div>
+                    <div class="form-body">
+                        <div class="info-box">
+                            <strong>AFSymp</strong> is a validated 11-item questionnaire with a <em>one-week recall
+                                period</em>. It covers heart symptoms, tiredness, chest discomfort, dizziness, and
+                            shortness of breath. Please rate how much each symptom bothered you <strong>in the past 7
+                                days</strong>.<br><br>
+                            <strong>0 = Not at all · 1 = A little · 2 = Quite a bit · 3 = A great deal</strong>
+                        </div>
+
+                        <div id="afsymp-qs"></div>
+
+                        <div id="afsymp-score-display" class="score-display">
+                            <div>
+                                <div class="score-val" id="afsymp-score-val">0</div>
+                                <div class="score-label">AFSymp Total Score (0–33)</div>
+                            </div>
+                            <div>
+                                <div class="score-interp" id="afsymp-score-interp">Score updates as you answer</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card-foot">
+                        <span class="step-counter">Section <strong>8</strong> of 9 &nbsp;·&nbsp; AFSymp</span>
+                        <div style="display:flex;gap:12px">
+                            <button class="btn btn-secondary" onclick="goToPage(7)">← Back</button>
+                            <button class="btn btn-primary" onclick="goToPage(9)">Next: AF6 →</button>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ────────────────────────────────────────────
+                 PAGE 9 — AF6
+            ──────────────────────────────────────────── -->
+            <section class="section-page" id="page-9">
+                <div class="form-card">
+                    <div class="card-topbar">
+                        <div class="topbar-icon">📱</div>
+                        <div class="topbar-text">
+                            <h2>AF6</h2>
+                            <p>Six-Item AF-Specific Symptom &amp; Quality-of-Life Questionnaire</p>
+                        </div>
+                    </div>
+                    <div class="form-body">
+                        <div class="info-box">
+                            <strong>AF6</strong> is a short 6-item AF-specific questionnaire with demonstrated
+                            reliability. It has been studied alongside AFEQT and other AF patient-reported outcome
+                            instruments. Its brevity makes it ideal for phone or rapid assessment. Please rate each item
+                            for <em>the past week</em>.
+                        </div>
+
+                        <div id="af6-qs"></div>
+
+                        <div id="af6-score-display" class="score-display">
+                            <div>
+                                <div class="score-val" id="af6-score-val">0</div>
+                                <div class="score-label">AF6 Total Score (0–36)</div>
+                            </div>
+                            <div>
+                                <div class="score-interp" id="af6-score-interp">Higher score = greater symptom burden
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Final summary trigger -->
+                        <div
+                            style="margin-top:28px;padding:20px;background:var(--crimson-faint);border:1px solid var(--crimson-pale);border-radius:var(--radius-sm);">
+                            <p style="font-size:0.84rem;color:var(--crimson-dark);font-weight:600;margin-bottom:8px">🎉
+                                You've completed all 8 assessment instruments!</p>
+                            <p style="font-size:0.78rem;color:var(--text-mid);line-height:1.6">Click <strong>View
+                                    Summary</strong> to see your compiled scores, which will be shared securely with
+                                your care team at Dartmouth Hitchcock Medical Center.</p>
+                        </div>
+                    </div>
+                    <div class="card-foot">
+                        <span class="step-counter">Section <strong>9</strong> of 9 &nbsp;·&nbsp; AF6</span>
+                        <div style="display:flex;gap:12px">
+                            <button class="btn btn-secondary" onclick="goToPage(8)">← Back</button>
+                            <button class="btn btn-primary" onclick="goToPage(10)" id="view-summary-btn">View Summary
+                                →</button>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ────────────────────────────────────────────
+                 PAGE 10 — SUMMARY
+            ──────────────────────────────────────────── -->
+            <section class="section-page" id="page-10">
+                <div class="form-card">
+                    <div class="card-topbar">
+                        <div class="topbar-icon">✅</div>
+                        <div class="topbar-text">
+                            <h2>Thank You</h2>
+                            <p>Aviraj Soin &amp; Jose Rodriguez, MD — Dartmouth Hitchcock Medical Center</p>
+                        </div>
+                    </div>
+                    <div class="form-body" style="text-align:center;padding:48px 24px">
+                        <div style="font-size:3rem;margin-bottom:12px"></div>
+                        <h3 style="margin-bottom:10px">Thank you for completing the questionnaire.</h3>
+                        <p style="color:var(--text-mid);line-height:1.6">Your responses have been received.</p>
+                        <div class="info-box" id="submit-status" style="display:none;margin-top:24px"></div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ═══ SIDEBAR ═══ -->
+            <aside class="sidebar">
+
+                <!-- Progress tracker -->
+                <div class="side-card">
+                    <div class="side-card-hd">📋 Progress</div>
+                    <div class="side-card-body">
+                        <div class="check-list" id="sidebar-checklist">
+                            <div class="check-item todo" id="sl-1">
+                                <div class="ci">1</div> Patient Info
+                            </div>
+                            <div class="check-item todo" id="sl-2">
+                                <div class="ci">2</div> CHARGE-AF
+                            </div>
+                            <div class="check-item todo" id="sl-3">
+                                <div class="ci">3</div> C₂HEST
+                            </div>
+                            <div class="check-item todo" id="sl-4">
+                                <div class="ci">4</div> EHRA Scale
+                            </div>
+                            <div class="check-item todo" id="sl-5">
+                                <div class="ci">5</div> AFEQT
+                            </div>
+                            <div class="check-item todo" id="sl-6">
+                                <div class="ci">6</div> AFSS (Toronto)
+                            </div>
+                            <div class="check-item todo" id="sl-7">
+                                <div class="ci">7</div> CCS-SAF
+                            </div>
+                            <div class="check-item todo" id="sl-8">
+                                <div class="ci">8</div> AFSymp
+                            </div>
+                            <div class="check-item todo" id="sl-9">
+                                <div class="ci">9</div> AF6
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Live scores -->
+                <div class="side-card">
+                    <div class="side-card-hd">📊 Live Scores</div>
+                    <div class="side-card-body">
+                        <div class="score-summary-list">
+                            <div class="score-row">
+                                <span class="sr-name">C₂HEST</span>
+                                <span class="sr-val" id="live-chest">—</span>
+                            </div>
+                            <div class="score-row">
+                                <span class="sr-name">AFEQT</span>
+                                <span class="sr-val" id="live-afeqt">—</span>
+                            </div>
+                            <div class="score-row">
+                                <span class="sr-name">CCS-SAF</span>
+                                <span class="sr-val" id="live-ccs">—</span>
+                            </div>
+                            <div class="score-row">
+                                <span class="sr-name">AFSymp</span>
+                                <span class="sr-val" id="live-afsymp">—</span>
+                            </div>
+                            <div class="score-row">
+                                <span class="sr-name">AF6</span>
+                                <span class="sr-val" id="live-af6">—</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- HIPAA Notice -->
+                <div class="hipaa-card">
+                    <span style="font-size:26px">🔒</span>
+                    <h4>HIPAA Compliant</h4>
+                    <p>Your responses are encrypted and handled in accordance with HIPAA regulations. Data is used
+                        solely for your clinical care at Dartmouth Hitchcock Medical Center.</p>
+                </div>
+
+                <!-- Tips -->
+                <div class="side-card">
+                    <div class="side-card-hd">💡 Tips</div>
+                    <div class="side-card-body">
+                        <div class="tip-list">
+                            <div class="tip-item">Answer based on how you've felt recently, not just today.</div>
+                            <div class="tip-item">If you're unsure, choose the response that most closely applies.</div>
+                            <div class="tip-item">You can navigate between sections using the Back button.</div>
+                            <div class="tip-item">Your progress is tracked in the sidebar above.</div>
+                        </div>
+                    </div>
+                </div>
+
+            </aside>
+        </main>
+
+        <footer class="site-footer">
+            <p>© 2026 Dartmouth Hitchcock Medical Center · Aviraj Soin &amp; Jose Rodriguez, MD · AF AI Screening Tool
+            </p>
+            <div class="footer-links">
+                <a href="#">Privacy Policy</a>
+                <a href="#">HIPAA Notice</a>
+                <a href="#">Contact</a>
+            </div>
+        </footer>
+
+    </div><!-- end .page-wrap -->
+
+    <script>
+        /* ═══════════════════════════════════════════════════
+           STATE
+        ═══════════════════════════════════════════════════ */
+        const state = {
+            currentPage: 1,
+            completedPages: new Set(),
+            scores: {
+                charge: null,
+                chest: 0,
+                ehra: null,
+                afeqt: null,
+                afss: null,
+                ccs: null,
+                afsymp: 0,
+                af6: 0
+            }
+        };
+
+        /* ═══════════════════════════════════════════════════
+           NAVIGATION
+        ═══════════════════════════════════════════════════ */
+        function goToPage(n) {
+            // Mark current as completed
+            state.completedPages.add(state.currentPage);
+            updateSidebarChecklist(state.currentPage);
+
+            // Hide all
+            document.querySelectorAll('.section-page').forEach(p => p.classList.remove('active'));
+
+            // Show target
+            const target = document.getElementById('page-' + n);
+            if (target) { target.classList.add('active'); state.currentPage = n; }
+
+            // Update progress steps
+            for (let i = 1; i <= 9; i++) {
+                const node = document.getElementById('step-' + i);
+                if (!node) continue;
+                node.className = 'step-node';
+                // Remove step-bar if exists
+                const bar = node.querySelector('.step-bar');
+                if (bar) bar.remove();
+
+                if (i === n) {
+                    node.classList.add('active');
+                    const newBar = document.createElement('div');
+                    newBar.className = 'step-bar';
+                    node.appendChild(newBar);
+                } else if (state.completedPages.has(i)) {
+                    node.classList.add('done');
+                    // Add checkmark to circle
+                    const circle = node.querySelector('.step-circle');
+                    if (circle) circle.textContent = '✓';
+                } else {
+                    node.classList.add('upcoming');
+                }
+            }
+
+            // Hide progress nav on summary page
+            document.getElementById('progress-steps').style.display = (n === 10) ? 'none' : 'flex';
+
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+
+            if (n === 10) { buildSummary(); submitResponses(); }
+        }
+
+        function updateSidebarChecklist(pageNum) {
+            const el = document.getElementById('sl-' + pageNum);
+            if (el) {
+                el.classList.remove('todo');
+                el.classList.add('done');
+                el.querySelector('.ci').textContent = '✓';
+            }
+        }
+
+        /* ═══════════════════════════════════════════════════
+           RADIO / CHECKBOX / SCALE SELECTION
+        ═══════════════════════════════════════════════════ */
+        function selectRadio(el, groupId) {
+            document.querySelectorAll('#' + groupId + ' .radio-opt').forEach(o => o.classList.remove('selected'));
+            el.classList.add('selected');
+        }
+
+        function selectLikert(el, groupId, val) {
+            document.querySelectorAll('#' + groupId + ' .likert-btn').forEach(b => b.classList.remove('selected'));
+            el.classList.add('selected');
+            el.dataset.selected = val;
+            calcAfeqt();
+            calcAfsymp();
+        }
+
+        function selectScale(el, groupId) {
+            document.querySelectorAll('#' + groupId + ' .scale-btn').forEach(b => b.classList.remove('selected'));
+            el.classList.add('selected');
+        }
+
+        /* ═══════════════════════════════════════════════════
+           C₂HEST SCORE CALCULATION
+        ═══════════════════════════════════════════════════ */
+        function calcChest() {
+            let score = 0;
+            const cad = document.querySelector('input[name="chest-cad"]:checked');
+            const htn = document.querySelector('input[name="chest-htn"]:checked');
+            const eld = document.querySelector('input[name="chest-elderly"]:checked');
+            const hf = document.querySelector('input[name="chest-hf"]:checked');
+            const thy = document.querySelector('input[name="chest-thyroid"]:checked');
+
+            if (cad) {
+                const v = cad.value;
+                if (v === '2') score += 2;
+                else if (v === '1' || v === '1b') score += 1;
+            }
+            if (htn && htn.value === '1') score += 1;
+            if (eld && eld.value === '2') score += 2;
+            if (hf && hf.value === '2') score += 2;
+            if (thy && thy.value === '1') score += 1;
+
+            state.scores.chest = score;
+
+            const disp = document.getElementById('chest-score-display');
+            disp.classList.add('visible');
+            document.getElementById('chest-score-val').textContent = score;
+
+            let interp = 'Low risk';
+            if (score >= 4) interp = 'High risk of AF';
+            else if (score >= 2) interp = 'Moderate risk of AF';
+
+            document.getElementById('chest-score-interp').textContent = interp + ' · Score: ' + score + '/8';
+            document.getElementById('live-chest').textContent = score + '/8';
+        }
+
+        /* ═══════════════════════════════════════════════════
+           AFEQT QUESTION BUILDER
+        ═══════════════════════════════════════════════════ */
+        const AFEQT_SYMPTOMS = [
+            'Heart racing or pounding (palpitations)',
+            'Shortness of breath',
+            'Feeling weak or tired',
+            'Dizziness or lightheadedness'
+        ];
+        const AFEQT_ACTIVITIES = [
+            'Going for a walk or exercising',
+            'Climbing stairs or hills',
+            'Doing light household chores (e.g., cooking, housecleaning)',
+            'Doing heavy household chores (e.g., yard work, moving furniture)',
+            'Driving',
+            'Having sexual activity'
+        ];
+        const AFEQT_TREATMENT = [
+            'Side effects from medications or treatments',
+            'The time and effort to manage your medications or treatments',
+            'Having to depend on medications or treatments',
+            'Worry about serious complications from medications or treatments',
+            'Worry about having to take medications for the rest of your life',
+            'Costs of medications or treatments'
+        ];
+        const AFEQT_SATISFACTION = [
+            'Overall, how satisfied are you with the treatment you have received?',
+            'How satisfied are you with how well medications or treatments control your irregular heartbeat?',
+            'How satisfied are you with your doctor\'s efforts to help you understand your condition?',
+            'How satisfied are you with the overall quality of the medical care you have received?'
+        ];
+
+        function buildLikert7(questions, prefix, containerId) {
+            const container = document.getElementById(containerId);
+            if (!container) return;
+            container.innerHTML = '';
+            questions.forEach((q, i) => {
+                const idx = i + 1;
+                const qDiv = document.createElement('div');
+                qDiv.className = 'survey-q';
+                qDiv.innerHTML = `
+                <label class="survey-label"><span class="q-num">${idx}</span>${q}</label>
+                <div class="scale-row" id="${prefix}-${idx}">
+                    ${[1, 2, 3, 4, 5, 6, 7].map(n => `<div class="scale-btn" onclick="selectScale(this,'${prefix}-${idx}');calcAfeqt()">${n}</div>`).join('')}
+                </div>
+                <div class="scale-labels"><span>Not at all</span><span>Extremely bothered</span></div>
+            `;
+                if (i < questions.length - 1) {
+                    const divider = document.createElement('div');
+                    divider.className = 'divider-line';
+                    container.appendChild(qDiv);
+                    container.appendChild(divider);
+                } else {
+                    container.appendChild(qDiv);
+                }
+            });
+        }
+
+        function calcAfeqt() {
+            const allGroups = [];
+            ['symptom', 'activity', 'treatment', 'satisfaction'].forEach(domain => {
+                const questions = {
+                    symptom: AFEQT_SYMPTOMS,
+                    activity: AFEQT_ACTIVITIES,
+                    treatment: AFEQT_TREATMENT,
+                    satisfaction: AFEQT_SATISFACTION
+                }[domain];
+                questions.forEach((_, i) => {
+                    const group = document.getElementById('afeqt-' + domain.charAt(0) + '-' + (i + 1));
+                    if (group) {
+                        const sel = group.querySelector('.scale-btn.selected');
+                        if (sel) allGroups.push(parseInt(sel.textContent));
+                    }
+                });
+            });
+
+            if (allGroups.length === 0) return;
+            const rawSum = allGroups.reduce((a, b) => a + b, 0);
+            const n = allGroups.length;
+            const score = Math.round(((rawSum - n) / (n * 6)) * 100);
+
+            state.scores.afeqt = score;
+            const disp = document.getElementById('afeqt-score-display');
+            disp.classList.add('visible');
+            document.getElementById('afeqt-score-val').textContent = score;
+            document.getElementById('live-afeqt').textContent = score + '/100';
+        }
+
+        /* ═══════════════════════════════════════════════════
+           AFSYMP QUESTIONS
+        ═══════════════════════════════════════════════════ */
+        const AFSYMP_ITEMS = [
+            'Heart pounding or racing',
+            'Heart beating irregularly',
+            'Heart fluttering',
+            'Heart stopping and starting',
+            'Chest pain or discomfort',
+            'Feeling tired or exhausted',
+            'Lacking energy',
+            'Difficulty doing usual activities',
+            'Dizziness or light-headedness',
+            'Feeling faint or nearly fainting',
+            'Shortness of breath'
+        ];
+
+        function buildAfsymp() {
+            const container = document.getElementById('afsymp-qs');
+            if (!container) return;
+            container.innerHTML = '';
+            AFSYMP_ITEMS.forEach((q, i) => {
+                const idx = i + 1;
+                const qDiv = document.createElement('div');
+                qDiv.className = 'survey-q';
+                qDiv.innerHTML = `
+                <label class="survey-label"><span class="q-num">${idx}</span>${q}</label>
+                <div class="scale-row" id="afsymp-${idx}">
+                    ${[0, 1, 2, 3].map(n => `<div class="scale-btn" onclick="selectScale(this,'afsymp-${idx}');calcAfsymp()" data-val="${n}">${n}</div>`).join('')}
+                </div>
+                <div class="scale-labels"><span>0 — Not at all</span><span>3 — A great deal</span></div>
+            `;
+                container.appendChild(qDiv);
+                if (i < AFSYMP_ITEMS.length - 1) {
+                    const d = document.createElement('div');
+                    d.className = 'divider-line';
+                    container.appendChild(d);
+                }
+            });
+        }
+
+        function calcAfsymp() {
+            let total = 0;
+            let answered = 0;
+            AFSYMP_ITEMS.forEach((_, i) => {
+                const group = document.getElementById('afsymp-' + (i + 1));
+                if (group) {
+                    const sel = group.querySelector('.scale-btn.selected');
+                    if (sel) { total += parseInt(sel.dataset.val || sel.textContent); answered++; }
+                }
+            });
+            state.scores.afsymp = total;
+            const disp = document.getElementById('afsymp-score-display');
+            disp.classList.add('visible');
+            document.getElementById('afsymp-score-val').textContent = total;
+            let interp = 'Low symptom burden';
+            if (total > 20) interp = 'High symptom burden';
+            else if (total > 10) interp = 'Moderate symptom burden';
+            document.getElementById('afsymp-score-interp').textContent = interp + ' · ' + answered + '/11 answered';
+            document.getElementById('live-afsymp').textContent = total + '/33';
+        }
+
+        /* ═══════════════════════════════════════════════════
+           AF6 QUESTIONS
+        ═══════════════════════════════════════════════════ */
+        const AF6_ITEMS = [
+            'How often have you felt your heart beating abnormally?',
+            'How much have you felt tired or lacking in energy?',
+            'How much shortness of breath have you had?',
+            'How much have palpitations or heart racing bothered you?',
+            'How much has your heart condition limited your physical activities?',
+            'How much worry or anxiety have you felt about your heart rhythm?'
+        ];
+        const AF6_OPTS = ['Not at all', 'A little', 'Quite a bit', 'Very much', 'Extremely', 'Unable to do'];
+
+        function buildAf6() {
+            const container = document.getElementById('af6-qs');
+            if (!container) return;
+            container.innerHTML = '';
+            AF6_ITEMS.forEach((q, i) => {
+                const idx = i + 1;
+                const qDiv = document.createElement('div');
+                qDiv.className = 'survey-q';
+                let opts = AF6_OPTS.map((opt, oi) => `
+                <div class="scale-btn" onclick="selectScale(this,'af6-${idx}');calcAf6()" data-val="${oi}" style="min-width:70px;font-size:0.68rem;padding:8px 4px">${opt}</div>
+            `).join('');
+                qDiv.innerHTML = `
+                <label class="survey-label"><span class="q-num">${idx}</span>${q}</label>
+                <div class="scale-row" id="af6-${idx}" style="flex-wrap:wrap">
+                    ${opts}
+                </div>
+            `;
+                container.appendChild(qDiv);
+                if (i < AF6_ITEMS.length - 1) {
+                    const d = document.createElement('div');
+                    d.className = 'divider-line';
+                    container.appendChild(d);
+                }
+            });
+        }
+
+        function calcAf6() {
+            let total = 0;
+            let answered = 0;
+            AF6_ITEMS.forEach((_, i) => {
+                const group = document.getElementById('af6-' + (i + 1));
+                if (group) {
+                    const sel = group.querySelector('.scale-btn.selected');
+                    if (sel) { total += parseInt(sel.dataset.val || 0); answered++; }
+                }
+            });
+            state.scores.af6 = total;
+            const disp = document.getElementById('af6-score-display');
+            disp.classList.add('visible');
+            document.getElementById('af6-score-val').textContent = total;
+            document.getElementById('live-af6').textContent = total + '/30';
+        }
+
+        /* ═══════════════════════════════════════════════════
+           SUMMARY PAGE
+        ═══════════════════════════════════════════════════ */
+        function buildSummary() {
+            const grid = document.getElementById('summary-scores-grid');
+            if (!grid) return;
+
+            const ccsSel = document.querySelector('input[name="ccs-saf"]:checked');
+            const ccsVal = ccsSel ? 'Class ' + ccsSel.value : '—';
+            state.scores.ccs = ccsSel ? ccsSel.value : null;
+            document.getElementById('live-ccs').textContent = ccsSel ? ccsSel.value + '/4' : '—';
+
+            const ehraOverall = document.querySelector('input[name="ehra-overall"]:checked');
+
+            const items = [
+                { name: 'CHARGE-AF', val: state.scores.charge || 'Features captured', sub: 'Risk variables collected' },
+                { name: 'C₂HEST', val: (state.scores.chest !== null ? state.scores.chest + '/8' : '—'), sub: 'AF prediction score' },
+                { name: 'EHRA Class', val: ehraOverall ? 'EHRA ' + ehraOverall.value : '—', sub: 'Symptom classification' },
+                { name: 'AFEQT', val: (state.scores.afeqt !== null ? state.scores.afeqt + '/100' : '—'), sub: 'Quality of life score' },
+                { name: 'AFSS', val: 'Captured', sub: 'Burden & symptom data' },
+                { name: 'CCS-SAF', val: ccsVal, sub: 'Severity classification' },
+                { name: 'AFSymp', val: (state.scores.afsymp !== null ? state.scores.afsymp + '/33' : '—'), sub: '11-item symptom burden' },
+                { name: 'AF6', val: (state.scores.af6 !== null ? state.scores.af6 + '/30' : '—'), sub: '6-item brief scale' },
+            ];
+
+            grid.innerHTML = items.map(it => `
+            <div class="s-score-box">
+                <div class="s-name">${it.name}</div>
+                <div class="s-val">${it.val}</div>
+                <div class="s-interp">${it.sub}</div>
+            </div>
+        `).join('');
+        }
+
+        /* ═══════════════════════════════════════════════════
+           AFEQT GROUP ID HELPERS
+        ═══════════════════════════════════════════════════ */
+        // Override selectScale to also accept a prefix lookup via domain
+        function buildAfeqtDomain(questions, prefix, containerId) {
+            const container = document.getElementById(containerId);
+            if (!container) return;
+            container.innerHTML = '';
+            questions.forEach((q, i) => {
+                const idx = i + 1;
+                const groupId = `afeqt-${prefix}-${idx}`;
+                const qDiv = document.createElement('div');
+                qDiv.className = 'survey-q';
+                qDiv.innerHTML = `
+                <label class="survey-label"><span class="q-num">${idx}</span>${q}</label>
+                <div class="scale-row" id="${groupId}">
+                    ${[1, 2, 3, 4, 5, 6, 7].map(n => `<div class="scale-btn" onclick="selectScale(this,'${groupId}');calcAfeqt()">${n}</div>`).join('')}
+                </div>
+                <div class="scale-labels"><span>1 — Not at all</span><span>7 — Extremely</span></div>
+            `;
+                container.appendChild(qDiv);
+                if (i < questions.length - 1) {
+                    const d = document.createElement('div');
+                    d.className = 'divider-line';
+                    container.appendChild(d);
+                }
+            });
+        }
+
+        // Override calcAfeqt to use the correct group IDs
+        function calcAfeqt() {
+            let total = 0; let answered = 0;
+            const domains = [
+                { prefix: 'afeqt-s', count: AFEQT_SYMPTOMS.length },
+                { prefix: 'afeqt-a', count: AFEQT_ACTIVITIES.length },
+                { prefix: 'afeqt-t', count: AFEQT_TREATMENT.length },
+                { prefix: 'afeqt-sat', count: AFEQT_SATISFACTION.length },
+            ];
+            domains.forEach(d => {
+                for (let i = 1; i <= d.count; i++) {
+                    const group = document.getElementById(`${d.prefix}-${i}`);
+                    if (group) {
+                        const sel = group.querySelector('.scale-btn.selected');
+                        if (sel) { total += parseInt(sel.textContent); answered++; }
+                    }
+                }
+            });
+            if (answered === 0) return;
+            const maxPossible = answered * 7;
+            const minPossible = answered * 1;
+            const score = Math.round(((maxPossible - total) / (maxPossible - minPossible)) * 100);
+            state.scores.afeqt = score;
+            const disp = document.getElementById('afeqt-score-display');
+            disp.classList.add('visible');
+            document.getElementById('afeqt-score-val').textContent = score;
+            let interp = 'Good QoL';
+            if (score < 30) interp = 'Severely impaired QoL';
+            else if (score < 60) interp = 'Moderately impaired QoL';
+            document.getElementById('afeqt-score-interp').textContent = interp + ' · ' + answered + '/' + (AFEQT_SYMPTOMS.length + AFEQT_ACTIVITIES.length + AFEQT_TREATMENT.length + AFEQT_SATISFACTION.length) + ' answered';
+            document.getElementById('live-afeqt').textContent = score + '/100';
+        }
+
+        /* ═══════════════════════════════════════════════════
+           AGE AUTO-CALCULATION FROM DOB
+        ═══════════════════════════════════════════════════ */
+        function calcAgeFromDob() {
+            const dob = document.getElementById('pt-dob').value;
+            if (!dob) return;
+            const today = new Date();
+            const birth = new Date(dob);
+            let age = today.getFullYear() - birth.getFullYear();
+            const m = today.getMonth() - birth.getMonth();
+            if (m < 0 || (m === 0 && today.getDate() < birth.getDate())) age--;
+            const ageEl = document.getElementById('pt-age');
+            if (ageEl) ageEl.value = age;
+            // Also pre-populate CHARGE-AF age field (same value used as model feature)
+            const chargeAgeEl = document.getElementById('charge-age');
+            if (chargeAgeEl) chargeAgeEl.value = age;
+        }
+
+        /* ═══════════════════════════════════════════════════
+           SUBMISSION TO GOOGLE APPS SCRIPT
+        ═══════════════════════════════════════════════════ */
+        const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbzJYvKa4imMyVAo4eM6ucSpzT6AF9JFxrqYmG8lMwE7LKKG8x0imUzUWAuc6n9OLL8Cxw/exec';
+        let submitted = false;
+
+        function collectPayload() {
+            const key = s => s.replace(/-/g, '_');
+            const data = {};
+            // text / number / date / select inputs
+            document.querySelectorAll('input[name], select[name]').forEach(el => {
+                if (el.type === 'radio') {
+                    if (el.checked) data[key(el.name)] = el.value;
+                } else {
+                    data[key(el.name)] = el.value;
+                }
+            });
+            // scale / likert button groups (AFEQT, AFSymp, AF6, AFSS sliders, EHRA symptoms)
+            document.querySelectorAll('.scale-row[id], .likert-row[id]').forEach(row => {
+                const sel = row.querySelector('.scale-btn.selected, .likert-btn.selected');
+                if (sel) data[key(row.id)] = (sel.dataset.val !== undefined) ? sel.dataset.val : sel.textContent.trim();
+            });
+            return data;
+        }
+
+        async function submitResponses() {
+            if (submitted) return;
+            const box = document.getElementById('submit-status');
+            box.style.display = 'none';
+            if (APPS_SCRIPT_URL.indexOf('PASTE_') === 0) return;
+            try {
+                // text/plain avoids the CORS preflight that Apps Script cannot answer
+                const res = await fetch(APPS_SCRIPT_URL, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+                    body: JSON.stringify(collectPayload())
+                });
+                const out = await res.json();
+                if (!out.success) throw new Error(out.error || 'Unknown error');
+                submitted = true;
+            } catch (err) {
+                box.style.display = 'block';
+                box.innerHTML = 'We could not send your responses. <button class="btn btn-secondary" onclick="submitResponses()">Try again</button>';
+            }
+        }
+
+        /* ═══════════════════════════════════════════════════
+           INIT
+        ═══════════════════════════════════════════════════ */
+        document.addEventListener('DOMContentLoaded', function () {
+            buildAfeqtDomain(AFEQT_SYMPTOMS, 's', 'afeqt-symptom-qs');
+            buildAfeqtDomain(AFEQT_ACTIVITIES, 'a', 'afeqt-activity-qs');
+            buildAfeqtDomain(AFEQT_TREATMENT, 't', 'afeqt-treatment-qs');
+            buildAfeqtDomain(AFEQT_SATISFACTION, 'sat', 'afeqt-satisfaction-qs');
+            buildAfsymp();
+            buildAf6();
+
+            // Set max date on DOB input (no future dates)
+            const dobInput = document.getElementById('pt-dob');
+            if (dobInput) dobInput.max = new Date().toISOString().split('T')[0];
+
+            // Show live score displays by default
+            document.getElementById('chest-score-display').classList.add('visible');
+            document.getElementById('afsymp-score-display').classList.add('visible');
+            document.getElementById('af6-score-display').classList.add('visible');
+        });
+    </script>
+</body>
+
+</html>
